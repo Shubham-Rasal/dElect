@@ -14,14 +14,13 @@ const Landing = () => {
         try {
             if (window.ethereum) {
                 const { accounts } = window.ethereum._state;
-                console.log(accounts)
                 if (accounts.length !== 0) {
                     setIsConnected(true)
                     return
                 }
 
                 const provider = new ethers.providers.Web3Provider(window.ethereum)
-                 await provider.send("eth_requestAccounts", []);
+                await provider.send("eth_requestAccounts", []);
                 setIsConnected(true)
             } else {
                 console.log("Ethereum object doesn't exist")
