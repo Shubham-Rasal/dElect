@@ -23,6 +23,7 @@ const Landing = () => {
                 await provider.send("eth_requestAccounts", []);
                 setIsConnected(true)
             } else {
+                alert('Ethereum object does not exist')
                 console.log("Ethereum object doesn't exist")
             }
 
@@ -37,7 +38,7 @@ const Landing = () => {
 
     return (
 
-        <div className="flex flex-col h-screen items-center justify-center w-screen bg-orange-200 p-2">
+        <div className="flex flex-col h-screen items-center justify-center w-screen bg-gradient-to-r from-purple-500 to-pink-500 p-2">
 
             <h1 className='p-3 m-3 bg-slate-700 text-white text-3xl rounded-md text-center'>
                 Welcome to the Decentralized Election App -<span className='font-semibold'> dElect </span>

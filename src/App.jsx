@@ -43,8 +43,12 @@ const App = () => {
   }
 
   async function checkVoter() {
-    const voter = await contract.voters("0xeb7e64ec981a178a70eba05a37b3ee5e440df041");
-    console.log(voter.name)
+    const userAddress = await provider.listAccounts();
+    console.log(userAddress[0])
+    const voter = await contract.voters(userAddress[0]);
+    
+    console.log(voter);
+    return voter.name != ''
 
   }
 
@@ -65,10 +69,10 @@ const App = () => {
     console.log(voter.id)
     let bytes = uuidParse('6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b');
     console.log(bytes)
-    
-    const id = Math.round(Math.random()*1000);
-    
-    const res = await contract.addVoter(voter.name,id, voter.country, voter.description)
+
+    const id = Math.round(Math.random() * 1000);
+
+    const res = await contract.addVoter(voter.name, id, voter.country, voter.description)
     console.log(res)
 
   }
@@ -80,12 +84,13 @@ const App = () => {
 
     return (
       <>
-        <div className=" transition-all modal w-screen h-screen absolute opacity-0 invisible  ease-in-out delay-500  bg-green-100">
+        {/* modal */}
+        <div className=" transition-all modal w-screen h-screen absolute opacity-0 invisible  ease-in-out delay-500  bg-gradient-to-r from-purple-500 to-pink-500">
           <div className="modal-body h-full w-full flex flex-col justify-center items-center ">
             <div class="flex justify-center">
               <div>
                 <div class="form-floating mb-3 xl:w-96">
-                  <input onChange={handleOnChange} type="text" name="name" class="form-control
+                  <input autoComplete="off" onChange={handleOnChange} type="text" name="name" class="form-control
                                     block
                                   w-full
                           px-3
@@ -135,18 +140,13 @@ const App = () => {
           </div>
         </div>
         {/* <h1 className="bg-amber-500">Connected as : {state.accounts[0]}</h1> */}
-        <div className="flex flex-col w-screen h-screen  items-start  bg-slate-900 overflow-x-hidden">
-          <div className="flex w-full fixed z-50 justify-end items-center bg-slate-700 overflow-x-hidden">
-            <div onClick={() => openRegisterModal()} className="register text-amber-400 text-center h-full hover:bg-slate-500 cursor-pointer p-2 m-2">
-
-
-              Register as voter !
-
-            </div>
-
-
-
-
+        <div className="flex flex-col w-screen h-screen  items-start  bg-gradient-to-r from-violet-500 to-fuchsia-500 overflow-x-hidden">
+          <div className="flex w-full h-fit fixed z-50 justify-end items-center bg-fuchsia-900 overflow-x-hidden">
+            {!checkVoter() &&
+              <div onClick={() => openRegisterModal()} className="register text-amber-400 text-center h-full hover:bg-slate-500 cursor-pointer p-2 m-2">
+                Register as voter !
+              </div>
+            }
 
             <button className="p-3 pl-5 pr-5 m-2
             text-slate-900 bg-amber-300 text-lg
@@ -166,7 +166,7 @@ const App = () => {
             </button>
 
           </div>
-          <div className="flex flex-col w-75 justify-center translate-y-20 items-center w-screen">
+          <div className="flex flex-col w-75 justify-center translate-y-20 items-center w-screen ">
             <h1 className="text-lg font-bold bg-slate-100 m-2 p-2">Active Elections to vote for</h1>
             <div className="flex flex-col sm:w-2/4 w-auto bg-slate-500 m-3 p-3 rounded-md ">
               <div className="title text-lg font-bold bg-slate-100 m-2 p-2 rounded-md shadow-xl">MID-TERM GENERAL ELECTION</div>

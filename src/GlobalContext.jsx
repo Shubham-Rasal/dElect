@@ -3,7 +3,9 @@ import { useState, createContext } from 'react';
 export const GlobalContext = createContext();
 
 const { accounts } = window.ethereum._state;
-const c = (accounts.length !== 0)
+console.log(accounts)
+const c = ( accounts !== null && accounts.length !== 0 )
+console.log("c",c)
 export const GlobalContextProvider = (props) => {
     const [isConnected, setIsConnected] = useState(c);
 
