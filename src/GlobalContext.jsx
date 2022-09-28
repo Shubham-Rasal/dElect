@@ -11,7 +11,7 @@ export const GlobalContextProvider = (props) => {
     const [isConnected, setIsConnected] = useState(c);
     const provider = new ethers.providers.Web3Provider(window.ethereum)
     const contractABI = abi
-    const contractAddress = "0xF9963A9269C9330dd221ac1375Ee60280502Fb39"
+    const contractAddress = "0xBCB43124eb1185Bd7E45c5336Fda3bf3498A0fEc"
     const contract = new ethers.Contract(contractAddress, contractABI, provider.getSigner())
 
 

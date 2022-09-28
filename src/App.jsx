@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useState ,useEffect} from "react"
 import Landing from "./components/Landing"
 import { ethers } from "ethers"
 import { v4 as uuidv4, parse as uuidParse } from 'uuid';
@@ -10,9 +10,9 @@ import Election from "./components/Election";
 import Button from "./components/Button";
 const App = () => {
 
-  const {connect} = useContext(GlobalContext);
+  const { connect } = useContext(GlobalContext);
   console.log(connect)
-  const [isConnected,setIsConnected] = connect;
+  const [isConnected, setIsConnected] = connect;
   const [isVoter, setIsVoter] = useState(false);
 
   const state = window.ethereum._state
@@ -20,8 +20,9 @@ const App = () => {
   const { accounts } = window.ethereum._state;
   const provider = new ethers.providers.Web3Provider(window.ethereum)
   const contractABI = abi
-  const contractAddress = "0xF9963A9269C9330dd221ac1375Ee60280502Fb39"
+  const contractAddress = "0xBCB43124eb1185Bd7E45c5336Fda3bf3498A0fEc"
   const contract = new ethers.Contract(contractAddress, contractABI, provider.getSigner())
+  const modal = document.getElementsByClassName('modal');
   let voter = {
     name: "",
     id: uuidv4(),
@@ -32,18 +33,21 @@ const App = () => {
 
 
 
-  async function checkVoter() {
+  async function isaVoter() {
     const userAddress = await provider.listAccounts();
-    console.log(userAddress[0])
+    // console.log(userAddress[0])
     const voter = await contract.voters(userAddress[0]);
 
-    console.log(voter);
-    return voter.name != ''
+
+    if (voter.name != '')
+      return false
+    else
+      return true
 
   }
 
 
-  const modal = document.getElementsByClassName('modal');
+
   async function openRegisterModal() {
     console.log(modal[0])
     modal[0].classList.remove('invisible')
@@ -54,11 +58,21 @@ const App = () => {
   }
 
 
+  useEffect(() => {
+   (async()=>{
+     const temp = await isaVoter();
+     console.log("temp ",temp)
+     setIsVoter(temp)
+
+   })()
+    
+  }, [])
+  
+  
+  
+
 
   if (isConnected) {
-
-    checkVoter()
-
 
     return (
       <>
@@ -67,23 +81,23 @@ const App = () => {
         {/* <h1 className="bg-amber-500">Connected as : {state.accounts[0]}</h1> */}
         <div className="flex flex-col w-screen h-screen  items-start  bg-gradient-to-r from-violet-500 to-fuchsia-500 overflow-x-hidden">
           <div className="flex w-full h-fit fixed z-50 justify-end items-center bg-fuchsia-900 overflow-x-hidden">
-            {!checkVoter() &&
+            {!isVoter &&
               <div onClick={() => openRegisterModal()} className="register text-amber-400 text-center h-full hover:bg-slate-500 cursor-pointer p-2 m-2">
                 Register as voter !
               </div>
             }
 
-            <Button name='Create'/>
+            <Button name='Create' />
             <Link to='/dElect/candidate'>
-            <Button name='Apply'/>
+              <Button name='Apply' />
             </Link>
 
           </div>
           <div className="flex flex-col w-75 justify-center translate-y-20 items-center w-screen ">
             <h1 className="text-lg font-bold bg-slate-100 m-2 p-2">Active Elections to vote for</h1>
-            <Election/>
-            <Election/>
-            <Election/>
+            <Election />
+            <Election />
+            <Election />
           </div>
 
         </div>
