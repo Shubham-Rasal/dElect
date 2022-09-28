@@ -3,7 +3,9 @@ import { ethers } from 'ethers';
 import { GlobalContext } from '../GlobalContext';
 const Landing = () => {
 
-    const [isConnected, setIsConnected] = useContext(GlobalContext)
+    const { connect } = useContext(GlobalContext);
+    console.log(connect)
+    const [isConnected, setIsConnected] = connect;
     async function handleConnect(e) {
         //styling
         e.preventDefault();
