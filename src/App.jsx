@@ -5,6 +5,8 @@ import { v4 as uuidv4, parse as uuidParse } from 'uuid';
 import abi from './artifacts/abi.json'
 import { GlobalContext } from "./GlobalContext"
 import { toUtf8String } from "ethers/lib/utils";
+import Modal from "./components/Modal";
+import { Link } from "react-router-dom";
 const App = () => {
 
   const [isConnected, setIsConnected] = useContext(GlobalContext);
@@ -25,28 +27,13 @@ const App = () => {
     voterAddress: ""
   }
 
-  function handleOnChange(e) {
 
-    console.log(e.target.value)
-    const name = e.target.name;
-    switch (name) {
-      case "type":
-
-        voter.description = e.target.value;
-
-        break;
-      case 'name':
-        voter.name = e.target.value;
-        break;
-    }
-
-  }
 
   async function checkVoter() {
     const userAddress = await provider.listAccounts();
     console.log(userAddress[0])
     const voter = await contract.voters(userAddress[0]);
-    
+
     console.log(voter);
     return voter.name != ''
 
@@ -63,19 +50,7 @@ const App = () => {
 
   }
 
-  async function handleRegister() {
-    modal[0].classList.add('invisible')
-    modal[0].classList.add('opacity-0')
-    console.log(voter.id)
-    let bytes = uuidParse('6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b');
-    console.log(bytes)
 
-    const id = Math.round(Math.random() * 1000);
-
-    const res = await contract.addVoter(voter.name, id, voter.country, voter.description)
-    console.log(res)
-
-  }
 
   if (isConnected) {
 
@@ -85,60 +60,7 @@ const App = () => {
     return (
       <>
         {/* modal */}
-        <div className=" transition-all modal w-screen h-screen absolute opacity-0 invisible  ease-in-out delay-500  bg-gradient-to-r from-purple-500 to-pink-500">
-          <div className="modal-body h-full w-full flex flex-col justify-center items-center ">
-            <div class="flex justify-center">
-              <div>
-                <div class="form-floating mb-3 xl:w-96">
-                  <input autoComplete="off" onChange={handleOnChange} type="text" name="name" class="form-control
-                                    block
-                                  w-full
-                          px-3
-                          py-1.5
-                          text-base
-                          font-normal
-                          text-gray-700
-                          bg-white bg-clip-padding
-                          border border-solid border-gray-300
-                          rounded
-                          transition
-                          ease-in-out
-                          m-0
-                        focus:bg-white  focus:border-green-600 focus:outline-green-600" id="floatingInput" placeholder="name@example.com" />
-                  <label for="floatingInput" class="text-gray-700">Name</label>
-                </div>
-                <div class="mb-3 xl:w-96">
-                  <select id="selectType" onChange={handleOnChange} name='type' class="form-select appearance-none
-                      block
-                      w-full
-                      px-3
-                      py-1.5
-                      text-base
-                      font-normal
-                      text-gray-700
-                      bg-white bg-clip-padding bg-no-repeat
-                      border border-solid border-gray-300
-                      rounded
-                      transition
-                      ease-in-out
-                      m-0
-                      focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" aria-label="Default select example">
-                    {/* <option>Open this select menu</option> */}
-                    <option value="Student">Student</option>
-                    <option value="Professional">Professional</option>
-                    <option selected value="Other">Other</option>
-                  </select>
-                </div>
-
-
-                <button onClick={handleRegister} type="button" class="inline-block px-6 py-2 border-2 border-green-500
-                 text-green-500 font-medium text-xs leading-tight uppercase rounded-full
-                  hover:bg-green-500 hover:text-white
-                focus:outline-none focus:ring-0 transition duration-150 ease-in-out">REGISTER</button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Modal />
         {/* <h1 className="bg-amber-500">Connected as : {state.accounts[0]}</h1> */}
         <div className="flex flex-col w-screen h-screen  items-start  bg-gradient-to-r from-violet-500 to-fuchsia-500 overflow-x-hidden">
           <div className="flex w-full h-fit fixed z-50 justify-end items-center bg-fuchsia-900 overflow-x-hidden">
@@ -156,14 +78,16 @@ const App = () => {
             ">
               Create
             </button>
-            <button className="p-3 pl-5 pr-5 m-2
+            <Link to='/dElect/candidate'>
+              <button className="p-3 pl-5 pr-5 m-2
             text-slate-900 bg-amber-300 text-lg
             font-semibold rounded-md tracking-wider
             transform hover:shadow-lg transition duration-700
             hover:ring-amber-200 ring
             ">
-              Apply
-            </button>
+                Apply
+              </button>
+            </Link>
 
           </div>
           <div className="flex flex-col w-75 justify-center translate-y-20 items-center w-screen ">
