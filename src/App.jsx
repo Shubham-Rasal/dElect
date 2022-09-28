@@ -10,36 +10,32 @@ import Election from "./components/Election";
 import Button from "./components/Button";
 const App = () => {
 
-  const { connect } = useContext(GlobalContext);
-  console.log(connect)
+  const { connect ,contract , voter} = useContext(GlobalContext);
+  // const value  = useContext(GlobalContext);
+  // console.log(value)
+  // console.log(connect)
   const [isConnected, setIsConnected] = connect;
-  const [isVoter, setIsVoter] = useState(false);
+  const [isVoter, setIsVoter] = voter;
 
   const state = window.ethereum._state
   console.log("Connecton Status:", state.isConnected)
   const { accounts } = window.ethereum._state;
   const provider = new ethers.providers.Web3Provider(window.ethereum)
-  const contractABI = abi
-  const contractAddress = "0xBCB43124eb1185Bd7E45c5336Fda3bf3498A0fEc"
-  const contract = new ethers.Contract(contractAddress, contractABI, provider.getSigner())
+  // const contractABI = abi
+  // const contractAddress = "0xBCB43124eb1185Bd7E45c5336Fda3bf3498A0fEc"
+  // const contract = new ethers.Contract(contractAddress, contractABI, provider.getSigner())
   const modal = document.getElementsByClassName('modal');
-  let voter = {
-    name: "",
-    id: uuidv4(),
-    description: "",
-    country: "INDIA",
-    voterAddress: ""
-  }
-
+  
 
 
   async function isaVoter() {
     const userAddress = await provider.listAccounts();
     // console.log(userAddress[0])
     const voter = await contract.voters(userAddress[0]);
+    console.log(voter)
 
 
-    if (voter.name != '')
+    if (voter.name == '')
       return false
     else
       return true
@@ -49,7 +45,7 @@ const App = () => {
 
 
   async function openRegisterModal() {
-    console.log(modal[0])
+    // console.log(modal[0])
     modal[0].classList.remove('invisible')
     modal[0].classList.remove('opacity-0')
 
@@ -61,7 +57,7 @@ const App = () => {
   useEffect(() => {
    (async()=>{
      const temp = await isaVoter();
-     console.log("temp ",temp)
+    //  console.log("temp ",temp)
      setIsVoter(temp)
 
    })()

@@ -1,14 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { v4 as uuidv4, parse as uuidParse } from 'uuid';
 import { ethers } from 'ethers';
-import abi from '../artifacts/abi.json'
+import { GlobalContext } from '../GlobalContext';
 
 const Modal = () => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum)
-    const contractABI = abi
-    const contractAddress = "0xBCB43124eb1185Bd7E45c5336Fda3bf3498A0fEc"
-    const contract = new ethers.Contract(contractAddress, contractABI, provider.getSigner())
-    let voter = {
+   const {contract, voter}  = useContext(GlobalContext);
+    let tVoter = {
         name: "",
         id: uuidv4(),
         description: "",
@@ -23,11 +20,11 @@ const Modal = () => {
         switch (name) {
             case "type":
 
-                voter.description = e.target.value;
+                tVoter.description = e.target.value;
 
                 break;
             case 'name':
-                voter.name = e.target.value;
+                tVoter.name = e.target.value;
                 break;
         }
 
@@ -35,12 +32,12 @@ const Modal = () => {
     const modal = document.getElementsByClassName('modal');
     async function handleRegister() {
         const id = Math.round(Math.random() * 1000);
-        if(voter.name === '' ){
+        if(tVoter.name === '' ){
             alert('Enter a name');
             return;
         }
         try {
-            const res = await contract.addVoter(voter.name, id, voter.country, voter.description)
+            const res = await contract.addVoter(tVoter.name, id, tVoter.country, tVoter.description)
             modal[0].classList.add('invisible')
             modal[0].classList.add('opacity-0')
             console.log(res)

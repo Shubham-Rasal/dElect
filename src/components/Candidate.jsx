@@ -1,16 +1,39 @@
-import React, { useState ,useEffect } from 'react'
+import React, { useState ,useEffect ,useContext } from 'react'
+import { GlobalContext } from '../GlobalContext'
 
 const Candidate = () => {
+
+    const {contract} = useContext(GlobalContext)
+
     const [statusClass, setStatusClass] = useState({
-        className: 'bg-green-300',
+        className: 'bg-green-500',
         status: 'active'
     })
+    const [elections,setElctions] = useState([]);
     useEffect(() => {
+        const elections = [];
 
-        setStatusClass({
-            className: 'bg-yellow-500',
-            status: 'closed'
-        })
+        (async()=>{
+            const electionCount = await contract.electionCount();
+            console.log(Number(electionCount.toString()))
+
+            for(let i=1;i<=electionCount;i++){
+
+                const election = await  contract.elections(i);
+                console.log(election)
+                elections.push(election)
+
+            }
+            console.log(elections)
+
+        })()
+
+
+
+        // setStatusClass({
+        //     className: 'bg-yellow-500',
+        //     status: 'closed'
+        // })
 
 
     }, [])
