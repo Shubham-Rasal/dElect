@@ -37,7 +37,7 @@ const Modal = () => {
             return;
         }
         try {
-            const res = await contract.addVoter(tVoter.name, id, tVoter.country, tVoter.description)
+            const res = await contract.addVoter(tVoter.name, id, tVoter.description)
             modal[0].classList.add('invisible')
             modal[0].classList.add('opacity-0')
             console.log(res)

@@ -11,9 +11,7 @@ import Button from "./components/Button";
 const App = () => {
 
   const { connect ,contract , voter} = useContext(GlobalContext);
-  // const value  = useContext(GlobalContext);
-  // console.log(value)
-  // console.log(connect)
+
   const [isConnected, setIsConnected] = connect;
   const [isVoter, setIsVoter] = voter;
 
@@ -21,9 +19,7 @@ const App = () => {
   console.log("Connecton Status:", state.isConnected)
   const { accounts } = window.ethereum._state;
   const provider = new ethers.providers.Web3Provider(window.ethereum)
-  // const contractABI = abi
-  // const contractAddress = "0xBCB43124eb1185Bd7E45c5336Fda3bf3498A0fEc"
-  // const contract = new ethers.Contract(contractAddress, contractABI, provider.getSigner())
+
   const modal = document.getElementsByClassName('modal');
   
 
@@ -57,7 +53,7 @@ const App = () => {
   useEffect(() => {
    (async()=>{
      const temp = await isaVoter();
-    //  console.log("temp ",temp)
+     console.log("temp ",temp)
      setIsVoter(temp)
 
    })()
@@ -72,9 +68,9 @@ const App = () => {
 
     return (
       <>
-        {/* modal */}
+       
         <Modal />
-        {/* <h1 className="bg-amber-500">Connected as : {state.accounts[0]}</h1> */}
+        <h1 className="bg-amber-100">Connected as : {state.accounts[0]}</h1>
         <div className="flex flex-col w-screen h-screen  items-start  bg-gradient-to-r from-violet-500 to-fuchsia-500 overflow-x-hidden">
           <div className="flex w-full h-fit fixed z-50 justify-end items-center bg-fuchsia-900 overflow-x-hidden">
             {!isVoter &&
@@ -83,7 +79,10 @@ const App = () => {
               </div>
             }
 
-            <Button name='Create' />
+            
+            <Link to='/dElect/admin'>
+              <Button name='Create' />
+            </Link>
             <Link to='/dElect/candidate'>
               <Button name='Apply' />
             </Link>

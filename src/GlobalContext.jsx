@@ -12,12 +12,12 @@ export const GlobalContextProvider = (props) => {
     const [isVoter, setIsVoter] = useState(false);
     const provider = new ethers.providers.Web3Provider(window.ethereum)
     const contractABI = abi
-    const contractAddress = "0xab4CEE9255B1B4c9E9AC7AED55a43755F41D1967"
+    const contractAddress = "0x4d6f7D051f092187Ee8760510275a6512ce983A2"
     const contract = new ethers.Contract(contractAddress, contractABI, provider.getSigner())
 
 
     return (
-        <GlobalContext.Provider value={{connect:[isConnected, setIsConnected],contract:contract , voter:[isVoter,setIsVoter]}}>
+        <GlobalContext.Provider value={{connect:[isConnected, setIsConnected],contract:contract , voter:[isVoter,setIsVoter] , accounts:accounts}}>
             {props.children}
         </GlobalContext.Provider>
     )
