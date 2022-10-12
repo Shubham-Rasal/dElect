@@ -14,6 +14,7 @@ const AdminPortal = () => {
     useEffect(() => {
         const getAdmins = async () => {
             const admin = await contract.admins(accounts[0]);
+            console.log(admin, accounts[0])
 
             if ((admin.adminAddress).toLowerCase() == accounts[0]) {
                 setIsAdmin(true);
@@ -23,8 +24,7 @@ const AdminPortal = () => {
 
         }
         getAdmins()
-        console.log(isAdmin)
-    }, [isAdmin]);
+    }, []);
 
 
 
