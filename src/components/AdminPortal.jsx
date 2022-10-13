@@ -1,17 +1,22 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect, useRef } from 'react'
 import { ElectionModal } from '../ElectionModal';
 import { GlobalContext } from '../GlobalContext';
+import Election, { AdminElection } from './Election';
 
 
 const AdminPortal = () => {
     const [isAdmin, setIsAdmin] = useState(false);
+    const [elections, setElections] = useState([]);
     const { contract, accounts, } = useContext(GlobalContext);
-    console.log(contract, accounts);
+    const dataFetchedRef = useRef(false);
+    // console.log(contract, accounts);
 
     const modal = document.getElementsByClassName('emodal');
 
 
     useEffect(() => {
+        // if (dataFetchedRef.current) return;
+        // dataFetchedRef.current = true;
         const getAdmins = async () => {
             const admin = await contract.admins(accounts[0]);
             console.log(admin, accounts[0])
@@ -24,7 +29,29 @@ const AdminPortal = () => {
 
         }
         getAdmins()
+
     }, []);
+
+    useEffect(() => {
+        if (dataFetchedRef.current) return;
+        dataFetchedRef.current = true;
+
+
+        async function getElections() {
+
+            const electionCount = await contract.electionCount();
+            console.log(electionCount.toString())
+            for (let i = 1; i <= electionCount; i++) {
+                const election = await contract.elections(i);                
+                setElections(old =>[ election,...old])
+                
+            }
+        }
+
+        getElections();
+    }, []);
+
+
 
 
 
@@ -44,10 +71,11 @@ const AdminPortal = () => {
 
     }
 
-   
+
 
     async function openElectionModal() {
         // console.log(modal[0])
+        console.log(elections)
         modal[0].classList.remove('invisible')
         modal[0].classList.remove('opacity-0')
 
@@ -56,13 +84,15 @@ const AdminPortal = () => {
     }
 
 
+
+
     return (
-       
+
         <div className="portal h-screen w-screen">
-        <ElectionModal />
+            <ElectionModal state ={{state:[elections,setElections]}} />
 
 
-            <h1 className='text-2xl w-screen text-center font-medium text-cyan-800' >Admin Portal</h1>
+            <h1 className='text-2xl w-full text-center font-medium text-cyan-800' >Admin Portal</h1>
             {!isAdmin &&
 
                 <div className="register w-screen flex justify-end p-3  bg-cyan-50 ">
@@ -71,20 +101,21 @@ const AdminPortal = () => {
 
             }
             {isAdmin &&
-                <div className="bg-green-100  w-screen p-2 mx-auto flex flex-col justify-end">
+                <div className="bg-green-200  w-screen p-2 mx-auto flex flex-col justify-end">
 
-                    <button onClick={openElectionModal} className="plus text-1xl bg-blue-700 px-5 p-1 rounded-sm text-white w-fit"  >New</button>
+                    <button onClick={openElectionModal} className="plus text-1xl  bg-blue-700 px-5 p-1 rounded-sm text-white w-fit"  >New</button>
 
                     <ul>
+                        {/* {elections.map((election,index)=>(
+                            <AdminElection key={index} election={election} />
+                        ))} */}
+                        <AdminElection  />
 
-                        <li>election 1</li>
-                        <li>election 2</li>
-                        <li>election 3</li>
                     </ul>
                 </div>
             }
         </div>
-       
+
     )
 }
 
