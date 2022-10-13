@@ -10,14 +10,31 @@ const c = (accounts !== null && accounts.length !== 0)
 export const GlobalContextProvider = (props) => {
     const [isConnected, setIsConnected] = useState(c);
     const [isVoter, setIsVoter] = useState(false);
+    const [isAdmin,setIsAdmin] = useState(false);
     const provider = new ethers.providers.Web3Provider(window.ethereum)
     const contractABI = abi
     const contractAddress = "0x4d6f7D051f092187Ee8760510275a6512ce983A2"
     const contract = new ethers.Contract(contractAddress, contractABI, provider.getSigner())
 
 
+
+    const getAdmins = async () => {
+        const admin = await contract.admins(accounts[0]);
+        console.log(admin, accounts[0])
+
+        if ((admin.adminAddress).toLowerCase() == accounts[0]) {
+            setIsAdmin(true);
+
+
+        }
+
+    }
+    getAdmins()
+
+
     return (
-        <GlobalContext.Provider value={{connect:[isConnected, setIsConnected],contract:contract , voter:[isVoter,setIsVoter] , accounts:accounts}}>
+        <GlobalContext.Provider value={{connect:[isConnected, setIsConnected],contract:contract , 
+        voter:[isVoter,setIsVoter] , accounts:accounts,admin:[isAdmin,setIsAdmin]}}>
             {props.children}
         </GlobalContext.Provider>
     )

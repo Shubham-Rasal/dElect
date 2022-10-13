@@ -1,4 +1,5 @@
 import React, { useState ,useEffect ,useContext } from 'react'
+import { Navigate,  } from 'react-router-dom'
 import { GlobalContext } from '../GlobalContext'
 import Button from './Button'
 import { CandidateElection } from './Election'
@@ -6,6 +7,10 @@ import { CandidateElection } from './Election'
 const Candidate = () => {
 
     const {contract} = useContext(GlobalContext)
+    const {connect} = useContext(GlobalContext)
+    const [connected,setIsConnected] = connect;
+    console.log(connected)
+    
 
     const [statusClass, setStatusClass] = useState({
         className: 'bg-green-300',
@@ -13,6 +18,7 @@ const Candidate = () => {
     })
     const [elections,setElections] = useState([]);
     useEffect(() => {
+        
         let elections = [];
 
         (async()=>{
@@ -38,6 +44,13 @@ const Candidate = () => {
 
 
     }, [])
+
+    if(!connected){
+        
+        return(
+            <Navigate replace to={'/dElect/'} />
+        )
+    }
 
     return (
         <div className="flex flex-col">

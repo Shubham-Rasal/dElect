@@ -1,36 +1,22 @@
 import React, { useState, useContext, useEffect, useRef } from 'react'
+import { Navigate } from 'react-router-dom';
 import { ElectionModal } from '../ElectionModal';
 import { GlobalContext } from '../GlobalContext';
 import Election, { AdminElection } from './Election';
+import { motion } from 'framer-motion'
 
 
 const AdminPortal = () => {
-    const [isAdmin, setIsAdmin] = useState(false);
+
     const [elections, setElections] = useState([]);
-    const { contract, accounts, } = useContext(GlobalContext);
+    const [isComplete, setIsComplete] = useState(false)
+    const { contract, accounts, admin } = useContext(GlobalContext);
     const dataFetchedRef = useRef(false);
+    const [isAdmin, setIsAdmin] = admin;
     // console.log(contract, accounts);
 
     const modal = document.getElementsByClassName('emodal');
 
-
-    useEffect(() => {
-        // if (dataFetchedRef.current) return;
-        // dataFetchedRef.current = true;
-        const getAdmins = async () => {
-            const admin = await contract.admins(accounts[0]);
-            console.log(admin, accounts[0])
-
-            if ((admin.adminAddress).toLowerCase() == accounts[0]) {
-                setIsAdmin(true);
-
-
-            }
-
-        }
-        getAdmins()
-
-    }, []);
 
     useEffect(() => {
         if (dataFetchedRef.current) return;
@@ -42,10 +28,12 @@ const AdminPortal = () => {
             const electionCount = await contract.electionCount();
             console.log(electionCount.toString())
             for (let i = 1; i <= electionCount; i++) {
-                const election = await contract.elections(i);                
-                setElections(old =>[ election,...old])
-                
+                const election = await contract.elections(i);
+                setElections(old => [election, ...old])
+
             }
+            setIsComplete(true)
+            
         }
 
         getElections();
@@ -84,14 +72,23 @@ const AdminPortal = () => {
     }
 
 
+    if (!isAdmin) {
+        alert("not an admin.")
+        return (
+            <Navigate replace to={'/dElect/'} />
+        )
+    }
+   
+
 
 
     return (
 
         <div className="portal h-screen w-screen">
-            <ElectionModal state ={{state:[elections,setElections]}} />
+            
+            <ElectionModal state={{ state: [elections, setElections] }} />
 
-
+             
             <h1 className='text-2xl w-full text-center font-medium text-cyan-800' >Admin Portal</h1>
             {!isAdmin &&
 
@@ -103,13 +100,13 @@ const AdminPortal = () => {
             {isAdmin &&
                 <div className="bg-green-200  w-screen p-2 mx-auto flex flex-col justify-end">
 
-                    <button onClick={openElectionModal} className="plus text-1xl  bg-blue-700 px-5 p-1 rounded-sm text-white w-fit"  >New</button>
+                    <button onClick={openElectionModal} className="plus text-1xl  bg-blue-700 px-5 p-1 rounded-sm text-white w-fit mx-2"  >New</button>
 
                     <ul>
-                        {/* {elections.map((election,index)=>(
+                        {isComplete &&  elections.map((election, index) => (
+
                             <AdminElection key={index} election={election} />
-                        ))} */}
-                        <AdminElection  />
+                        ))}
 
                     </ul>
                 </div>

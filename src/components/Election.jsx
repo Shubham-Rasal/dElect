@@ -1,10 +1,11 @@
 import React from 'react'
 import Button from './Button'
+import { motion } from 'framer-motion'
 
 const Election = ({ election }) => {
   return (
     <div className="flex flex-col sm:w-2/4 w-auto bg-slate-500 m-3 p-3 rounded-md ">
-      <div className="title text-lg font-bold bg-slate-100 m-2 p-2 rounded-md shadow-xl">{election.name}</div>
+      <div className="title text-lg font-bold bg-slate-100 m-2 p-2 rounded-md shadow-xl">{election?.name}</div>
       <div className=" bg-slate-200 m-2 p-2 ">
         Lorem ipsum dolor sit amet consectetur adipisicing elit.
         Velit delectus sed temporibus asperiores molestiae nihil ex
@@ -43,18 +44,32 @@ export const CandidateElection = ({ election }) => {
     </div>
   )
 }
-export const AdminElection = ({ election }) => {
-  console.log(Date().toLocaleUpperCase())
-  return (
-    <div className="container w-full bg-slate-300 my-3 mx-auto px-3">
 
-      <div className="title text-xl text-teal-700 p-1 m-1 ">Title</div>
+
+export const AdminElection = ({ election }) => {
+
+  console.log(election)
+  let {applicantCount,candidateCount,admin,startTime,duration,name} = election;
+  startTime = Date.parse(startTime);
+  
+  return (
+    <motion.div className="container w-full bg-slate-300 my-3 mx-auto px-3"
+    initial={{ scale: 0 }}
+    animate={{ scale: 1 }}
+    transition={{
+       delay: 0.5,
+       duration: 1
+    }}
+
+    >
+    
+      <div className="title text-xl text-teal-700 p-1 m-1 ">{name}</div>
       <div className="starttime w-full   flex gap-3 p-1 m-1 ">
         <div className=" bg-yellow-50 text-gray-500 font-semibold rounded-xl px-2 shadow-md ">Starts on {new Date().toLocaleString()}</div>
         <div className="duration bg-yellow-50 text-gray-600 font-semibold rounded-lg px-2 shadow-md">30 days left</div>
       </div>
       <div className="candidates w-full flex flex-col gap-3">
-        <h1 className='flex items-center h-10  text-slate-800 drop-shadow-xl  justify-center bg-violet-200 my-1 w-1/4' >Candidates</h1>
+        <h1 className='flex items-center h-10  text-slate-800 drop-shadow-xl  justify-center bg-violet-200 my-1 w-1/4' >Candidates {applicantCount.toString()}</h1>
         <div className="candidate
       bg-white  flex flex-col p-1 text-md m-1 shadow-md rounded-md  ">
 
@@ -76,7 +91,7 @@ export const AdminElection = ({ election }) => {
         
       </div>
 
-    </div>
+    </motion.div>
   )
 }
 
