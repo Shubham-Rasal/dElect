@@ -37,10 +37,7 @@ const Candidate = () => {
 
 
 
-        // setStatusClass({
-        //     className: 'bg-yellow-500',
-        //     status: 'closed'
-        // })
+       
 
 
     }, [])
@@ -66,7 +63,7 @@ const Candidate = () => {
             </div>
             <div className="standing flex flex-col items-center">
                 <div className="0 w-screen"> Approved Elections: </div>
-                <div className="election-card  ml-5 mt-3 w-2/4 shadow-xl rounded-md bg-slate-100 hover:scale-105 transition-all duration-300 ease-in">
+                {/* <div className="election-card  ml-5 mt-3 w-2/4 shadow-xl rounded-md bg-slate-100 hover:scale-105 transition-all duration-300 ease-in">
                     <div className={`name flex justify-between  items-center p-1 border-green-400 border-y-2 px-2 font-semibold text-lg  `}>Mid-Term Elections
                         <span className={`status ${statusClass.className}    p-1 px-2   m-1 rounded-full `}>{statusClass.status}</span>
                     </div>
@@ -83,7 +80,7 @@ const Candidate = () => {
                     <div>20</div>
                     </div>
                     <div className={` flex justify-between results-live text-xl font-semibold p-2 `}><span className='text-slate-500'>Status :</span>  Lost</div>
-                </div>
+                </div> */}
                
             </div>
         </div>

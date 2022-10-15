@@ -34,11 +34,23 @@ const Election = ({ election }) => {
 }
 
 export const CandidateElection = ({ election }) => {
+  let {applicantCount,candidateCount,admin,startTime,duration,name} = election;
+  const date   = new Date(startTime.toNumber());
+  const today = Date.parse(new Date().toLocaleString());
+  let timeLeft = Math.ceil((startTime.toNumber()-today)/((1000 * 60 * 60 * 24)));
+  const formatter = new Intl.RelativeTimeFormat('en');
+
+  
+  timeLeft = formatter.format(timeLeft,'days')
   return (
     <div className="flex flex-col shadow-lg bg-slate-200 m-3 p-1  rounded-md">
-      <div className="name p-1 m-1 ">name : {election.name}</div>
-      <div className="admin">Admin : {election.admin}</div>
-      <div className="start">Starts : {election.startTime.toString()}</div>
+      <div className="name p-1 m-1 text-xl font-semibold ">{name}</div>
+      <div className="admin">
+        <span>Admin : </span>{admin}</div>
+      <div className="start"><span className='text-slate-600' >
+      Starts on :
+        
+        </span>{date.toUTCString()}</div>
       <div className="time left">Time left to apply: 40days</div>
       <div className="apply"><Button name="Apply" /></div>
     </div>
