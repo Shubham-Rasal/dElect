@@ -48,9 +48,18 @@ export const CandidateElection = ({ election }) => {
 
 export const AdminElection = ({ election }) => {
 
-  console.log(election)
+  // console.log(election)
   let {applicantCount,candidateCount,admin,startTime,duration,name} = election;
-  startTime = Date.parse(startTime);
+  // startTime = Date.parse(startTime);
+  const date   = new Date(startTime.toNumber());
+  const today = Date.parse(new Date().toLocaleString());
+  let timeLeft = Math.ceil((startTime.toNumber()-today)/((1000 * 60 * 60 * 24)));
+  const formatter = new Intl.RelativeTimeFormat('en');
+
+  
+  timeLeft = formatter.format(timeLeft,'days')
+  
+
   
   return (
     <motion.div className="container w-full bg-slate-300 my-3 mx-auto px-3"
@@ -65,8 +74,8 @@ export const AdminElection = ({ election }) => {
     
       <div className="title text-xl text-teal-700 p-1 m-1 ">{name}</div>
       <div className="starttime w-full   flex gap-3 p-1 m-1 ">
-        <div className=" bg-yellow-50 text-gray-500 font-semibold rounded-xl px-2 shadow-md ">Starts on {new Date().toLocaleString()}</div>
-        <div className="duration bg-yellow-50 text-gray-600 font-semibold rounded-lg px-2 shadow-md">30 days left</div>
+        <div className=" bg-yellow-50 text-gray-500 font-semibold rounded-xl px-2 shadow-md ">Starts on {date.toUTCString()}</div>
+        <div className="duration bg-yellow-50 text-gray-600 font-semibold rounded-lg px-2 shadow-md">{timeLeft<0?"Election over":timeLeft}</div>
       </div>
       <div className="candidates w-full flex flex-col gap-3">
         <h1 className='flex items-center h-10  text-slate-800 drop-shadow-xl  justify-center bg-violet-200 my-1 w-1/4' >Candidates {applicantCount.toString()}</h1>

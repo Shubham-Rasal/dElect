@@ -9,7 +9,7 @@ import { motion } from 'framer-motion'
 const AdminPortal = () => {
 
     const [elections, setElections] = useState([]);
-    const [isComplete, setIsComplete] = useState(false)
+    const [isComplete, setIsComplete] = useState(true)
     const { contract, accounts, admin } = useContext(GlobalContext);
     const dataFetchedRef = useRef(false);
     const [isAdmin, setIsAdmin] = admin;
