@@ -10,6 +10,7 @@ const Candidate = () => {
     const {connect} = useContext(GlobalContext)
     const [connected,setIsConnected] = connect;
     console.log(connected)
+    let electionCount =0;
     
 
     const [statusClass, setStatusClass] = useState({
@@ -22,13 +23,13 @@ const Candidate = () => {
         let elections = [];
 
         (async()=>{
-            const electionCount = await contract.electionCount();
+             electionCount = await contract.electionCount();
             console.log("NO of Elections : ",Number(electionCount.toString()))
 
             for(let i=1;i<=electionCount;i++){
 
                 const election = await  contract.elections(i);                
-                elections.push(election)
+                elections =[election , ...elections]
 
             }
             setElections(elections)
@@ -56,7 +57,7 @@ const Candidate = () => {
                 {elections.map((election,index) =>{
                     // console.log(election)
                     return(
-                        <CandidateElection key={index} election={election}/>
+                        <CandidateElection key={index}  election={election}/>
                     )
                 })}
 

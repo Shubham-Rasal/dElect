@@ -1,6 +1,10 @@
 import React from 'react'
 import Button from './Button'
 import { motion } from 'framer-motion'
+import { useEffect, useState, useContext } from 'react'
+import { GlobalContext } from './../GlobalContext'
+
+
 
 const Election = ({ election }) => {
   return (
@@ -34,25 +38,53 @@ const Election = ({ election }) => {
 }
 
 export const CandidateElection = ({ election }) => {
-  let {applicantCount,candidateCount,admin,startTime,duration,name} = election;
-  const date   = new Date(startTime.toNumber());
+  const { contract } = useContext(GlobalContext)
+  const [hasApplied, setHasApplied] = useState(false)
+  let { applicantCount, candidateCount, admin, startTime, duration, name } = election;
+  const date = new Date(startTime.toNumber());
   const today = Date.parse(new Date().toLocaleString());
-  let timeLeft = Math.ceil((startTime.toNumber()-today)/((1000 * 60 * 60 * 24)));
+  let timeLeft = Math.ceil((startTime.toNumber() - today) / ((1000 * 60 * 60 * 24)));
   const formatter = new Intl.RelativeTimeFormat('en');
+  timeLeft = formatter.format(timeLeft, 'days')
 
-  
-  timeLeft = formatter.format(timeLeft,'days')
+  // useEffect(() => {
+  //   // console.log("Candidate Election")
+  //   (async () => {
+
+
+
+
+
+
+
+  //   })()
+  // })
+
+
+  async function apply() {
+    // console.log(election)
+    const res = await contract.applyForPost(2, "test");
+    const receipt = await res.wait()
+    console.log(receipt)
+
+
+  }
+
+
+
   return (
     <div className="flex flex-col shadow-lg bg-slate-200 m-3 p-1  rounded-md">
       <div className="name p-1 m-1 text-xl font-semibold ">{name}</div>
       <div className="admin">
         <span>Admin : </span>{admin}</div>
       <div className="start"><span className='text-slate-600' >
-      Starts on :
-        
-        </span>{date.toUTCString()}</div>
-      <div className="time left">Time left to apply: 40days</div>
-      <div className="apply"><Button name="Apply" /></div>
+        Starts on :
+
+      </span>{date.toUTCString()}</div>
+      <div className="time left">Time left to apply: {timeLeft}</div>
+      <div className="apply">
+        <button onClick={apply} className=" bg-green-300 p-2 m-1 rounded-md px-3 text-lg"  >Apply</button>
+      </div>
     </div>
   )
 }
@@ -61,33 +93,33 @@ export const CandidateElection = ({ election }) => {
 export const AdminElection = ({ election }) => {
 
   // console.log(election)
-  let {applicantCount,candidateCount,admin,startTime,duration,name} = election;
+  let { applicantCount, candidateCount, admin, startTime, duration, name } = election;
   // startTime = Date.parse(startTime);
-  const date   = new Date(startTime.toNumber());
+  const date = new Date(startTime.toNumber());
   const today = Date.parse(new Date().toLocaleString());
-  let timeLeft = Math.ceil((startTime.toNumber()-today)/((1000 * 60 * 60 * 24)));
+  let timeLeft = Math.ceil((startTime.toNumber() - today) / ((1000 * 60 * 60 * 24)));
   const formatter = new Intl.RelativeTimeFormat('en');
 
-  
-  timeLeft = formatter.format(timeLeft,'days')
-  
 
-  
+  timeLeft = formatter.format(timeLeft, 'days')
+
+
+
   return (
     <motion.div className="container w-full bg-slate-300 my-3 mx-auto px-3"
-    initial={{ scale: 0 }}
-    animate={{ scale: 1 }}
-    transition={{
-       delay: 0.5,
-       duration: 1
-    }}
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      transition={{
+        delay: 0.5,
+        duration: 1
+      }}
 
     >
-    
+
       <div className="title text-xl text-teal-700 p-1 m-1 ">{name}</div>
       <div className="starttime w-full   flex gap-3 p-1 m-1 ">
         <div className=" bg-yellow-50 text-gray-500 font-semibold rounded-xl px-2 shadow-md ">Starts on {date.toUTCString()}</div>
-        <div className="duration bg-yellow-50 text-gray-600 font-semibold rounded-lg px-2 shadow-md">{timeLeft<0?"Election over":timeLeft}</div>
+        <div className="duration bg-yellow-50 text-gray-600 font-semibold rounded-lg px-2 shadow-md">{timeLeft < 0 ? "Election over" : timeLeft}</div>
       </div>
       <div className="candidates w-full flex flex-col gap-3">
         <h1 className='flex items-center h-10  text-slate-800 drop-shadow-xl  justify-center bg-violet-200 my-1 w-1/4' >Candidates {applicantCount.toString()}</h1>
@@ -97,7 +129,7 @@ export const AdminElection = ({ election }) => {
           <div className="name">Name</div>
           <div className="Address">Addresss</div>
         </div>
-      
+
 
 
       </div>
@@ -108,8 +140,8 @@ export const AdminElection = ({ election }) => {
           <div className="address">Adreess</div>
           <button className='bg-teal-400 w-32 rounded-md shadow-md text-white' >Approve</button>
         </div>
-        
-        
+
+
       </div>
 
     </motion.div>
