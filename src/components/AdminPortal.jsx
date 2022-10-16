@@ -72,12 +72,7 @@ const AdminPortal = () => {
     }
 
 
-    if (!isAdmin) {
-        alert("not an admin.")
-        return (
-            <Navigate replace to={'/dElect/'} />
-        )
-    }
+    
    
 
 
