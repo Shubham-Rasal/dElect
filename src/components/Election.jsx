@@ -52,18 +52,13 @@ export const CandidateElection = ({ election }) => {
   //   (async () => {
 
 
-
-
-
-
-
   //   })()
   // })
 
 
   async function apply() {
     // console.log(election)
-    const res = await contract.applyForPost(2, "test");
+    const res = await contract.applyForPost(2, "test"); //use real id and 
     const receipt = await res.wait()
     console.log(receipt)
 
@@ -91,7 +86,11 @@ export const CandidateElection = ({ election }) => {
 
 
 export const AdminElection = ({ election }) => {
-
+  const { contract } = useContext(GlobalContext)
+  
+  const [applicants,setApplicants] = useState([])
+  const [candidates,setCandidates] = useState([])
+  
   // console.log(election)
   let { applicantCount, candidateCount, admin, startTime, duration, name } = election;
   // startTime = Date.parse(startTime);
@@ -102,6 +101,30 @@ export const AdminElection = ({ election }) => {
 
 
   timeLeft = formatter.format(timeLeft, 'days')
+
+
+  useEffect(()=>{
+     (async()=>{
+
+          for (let index = 0; index < candidateCount; index++) {
+            const candidate = await contract.getCandidate(index);
+            setCandidates([...candidates , candidate]);            
+          }
+          for (let index = 0; index < applicantCount; index++) {
+            const applicant = await contract.getApplicant(index);
+            setApplicants([...applicants , applicant]);            
+          }
+
+      
+
+     })()   
+     
+  },[])
+
+
+  async function approve(){
+    //implementation required
+  }
 
 
 
@@ -122,7 +145,7 @@ export const AdminElection = ({ election }) => {
         <div className="duration bg-yellow-50 text-gray-600 font-semibold rounded-lg px-2 shadow-md">{timeLeft < 0 ? "Election over" : timeLeft}</div>
       </div>
       <div className="candidates w-full flex flex-col gap-3">
-        <h1 className='flex items-center h-10  text-slate-800 drop-shadow-xl  justify-center bg-violet-200 my-1 w-1/4' >Candidates {applicantCount.toString()}</h1>
+        <h1 className='flex items-center h-10  text-slate-800 drop-shadow-xl  justify-center bg-violet-200 my-1 w-1/4' >Candidates {candidateCount.toString()}</h1>
         <div className="candidate
       bg-white  flex flex-col p-1 text-md m-1 shadow-md rounded-md  ">
 
@@ -134,11 +157,11 @@ export const AdminElection = ({ election }) => {
 
       </div>
       <div className="applicants flex flex-col gap-2">
-        <h2 className='flex items-center h-10  text-teal-800 drop-shadow-xl  justify-center bg-amber-100 my-1 w-1/4'>Applicants:</h2>
+        <h2 className='flex items-center h-10  text-teal-800 drop-shadow-xl  justify-center bg-amber-100 my-1 w-1/4'>Applicants: {applicantCount.toString()}</h2>
         <div className="applicant bg-white my-1 flex flex-col p-1  m-1 shadow-md rounded-md  ">
           <div className="name">Name</div>
           <div className="address">Adreess</div>
-          <button className='bg-teal-400 w-32 rounded-md shadow-md text-white' >Approve</button>
+          <button onClick={approve}  className='bg-teal-400 w-32 rounded-md shadow-md text-white' >Approve</button>
         </div>
 
 
