@@ -82,7 +82,7 @@ export const ElectionModal = ({ state }) => {
 
 
   return (
-    <div className=" transition-all emodal w-screen h-screen absolute opacity-0 invisible  ease-in-out delay-500  bg-gradient-to-r from-blue-300 to-pink-300">
+    <div className=" z-50 transition-all emodal w-screen h-screen absolute opacity-0 hidden  ease-in-out delay-500  bg-gradient-to-r from-blue-300 to-pink-300">
       <ToastContainer />
       <div className="modal-body h-full w-full flex flex-col justify-center items-center ">
         <div className="flex justify-center">

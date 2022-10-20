@@ -10,9 +10,10 @@ const AdminPortal = () => {
 
     const [elections, setElections] = useState([]);
     const [isComplete, setIsComplete] = useState(true)
-    const { contract, accounts, admin } = useContext(GlobalContext);
+    const { contract, accounts, admin , connect} = useContext(GlobalContext);
     const dataFetchedRef = useRef(false);
     const [isAdmin, setIsAdmin] = admin;
+    const [isConnected,setIsConnected] = connect;
     // console.log(contract, accounts);
 
     const modal = document.getElementsByClassName('emodal');
@@ -64,13 +65,19 @@ const AdminPortal = () => {
     async function openElectionModal() {
         // console.log(modal[0])
         console.log(elections)
-        modal[0].classList.remove('invisible')
+        modal[0].classList.remove('hidden')
         modal[0].classList.remove('opacity-0')
 
 
 
     }
+  
 
+    if(!isConnected){
+        return(
+            <Navigate replace to={'/dElect/'} />
+        )
+    }
 
     
    

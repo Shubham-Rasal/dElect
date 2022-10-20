@@ -64,7 +64,7 @@
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "_candidateId",
+				"name": "_applicantId",
 				"type": "uint256"
 			},
 			{
@@ -73,7 +73,7 @@
 				"type": "uint256"
 			}
 		],
-		"name": "approveCandidate",
+		"name": "approveApplicantForCandidate",
 		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
@@ -214,6 +214,11 @@
 			},
 			{
 				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
 				"name": "startTime",
 				"type": "uint256"
 			},
@@ -236,6 +241,58 @@
 				"internalType": "uint256",
 				"name": "winner",
 				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_electionId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_applicantId",
+				"type": "uint256"
+			}
+		],
+		"name": "getApplicant",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_electionId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_candidateId",
+				"type": "uint256"
+			}
+		],
+		"name": "getCandidate",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
 			}
 		],
 		"payable": false,
