@@ -5,38 +5,32 @@ import { useEffect, useState, useContext } from "react";
 import { GlobalContext } from "./../GlobalContext";
 
 const Election = ({ election }) => {
+  let { applicantCount, candidateCount, admin, startTime, duration, name, id } =
+    election;
+  const date = new Date(startTime.toNumber());
   return (
-    <div className="flex flex-col sm:w-2/4 w-auto bg-slate-500 m-3 p-3 rounded-md ">
+    <div className="flex flex-col sm:w-2/4 w-auto bg-blue-300 m-3 p-3 rounded-md ">
       <div className="title text-lg font-bold bg-slate-100 m-2 p-2 rounded-md shadow-xl">
-        {election?.name}
+        {name}
       </div>
-      <div className=" bg-slate-200 m-2 p-2 ">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit delectus
-        sed temporibus asperiores molestiae nihil ex iste debitis voluptas
-        architecto. Quas, culpa dicta tempora possimus expedita ipsam. Maxime,
-        sapiente illo!
+      <div className=" bg-slate-200 m-2 p-2  ">
+        <div className="candidates rounded-md flex text-center items-center  gap-2">
+          <div className="text-lg font-bold rounded-md ">Candidates</div>
+          <div className="text-sm font-bold text-gray-500 ">
+            {candidateCount.toString()} candidates
+          </div>
+        </div>
       </div>
-      <div className="criteria p-2">
-        <i>
-          <b>Criteria</b>
-        </i>
-        <li className="hover:bg-amber-300 text-xl font-semibold">
-          Should be matic token holder
-        </li>
-        <li className="hover:bg-amber-400 text-xl font-semibold">
-          Should be matic token holder
-        </li>
-        <li className="hover:bg-amber-500 text-xl font-semibold">
-          Should be matic token holder
-        </li>
+      <div className="start">
+        <span className="text-slate-600">Starts on :</span>
+        {date.toUTCString()}
       </div>
       <div className="vote">
         <button
-          className="p-3 pl-5 pr-5 m-2
-            bg-slate-900 text-amber-300 text-lg
-            font-semibold rounded-md tracking-wider
-            transform hover:shadow-lg transition duration-500
-            "
+          className=" bg-white text-blue-500 font-bold py-2 px-4 rounded-full
+          hover:bg-blue-500 hover:text-white border border-blue-500 hover:border-transparent
+            transition duration-300 ease-in-out"
+          
         >
           VOTE
         </button>
@@ -48,7 +42,7 @@ const Election = ({ election }) => {
 export const CandidateElection = ({ election }) => {
   const { contract, accounts } = useContext(GlobalContext);
   const userAddress = accounts[0];
-  const [hasApplied, setHasApplied] = useState(false); 
+  const [hasApplied, setHasApplied] = useState(false);
   let { applicantCount, candidateCount, admin, startTime, duration, name, id } =
     election;
   const date = new Date(startTime.toNumber());
@@ -63,36 +57,29 @@ export const CandidateElection = ({ election }) => {
     console.log("Election Applicants count : ", applicantCount.toNumber());
     console.log("Election Candidates count : ", candidateCount.toNumber());
     (async () => {
-
       //for loop for applicant count
-      for (let i = 1; i <= applicantCount.toNumber(); i++) {
+      for (let i = 0; i < applicantCount.toNumber(); i++) {
         const applicant = await contract.getApplicant(id, i);
-        console.log("Applicant : ", applicant);
-        if (applicant.applicantAddress === userAddress) {
-          if(applicant.appStatus == 'Pending') setHasApplied(true);
+        console.log("Applicant for " + name + " : ", applicant);
+        const applicantAddress = applicant.add;
+
+        //check if user has applied
+        console.log("User Address : ", userAddress.toString());
+        console.log("Applicant Address : ", applicantAddress.toString());
+        if (applicantAddress.toLowerCase() === userAddress.toLowerCase()) {
+          console.log("User has applied for " + name);
+          if (applicant.status == "Pending") setHasApplied(true);
           break;
         }
-
       }
-
-      
-      
-      
-
-
-      
-
-
-    })()
-  },[])
+    })();
+  }, []);
 
   async function apply() {
-    console.log(candidates);
-
     try {
       const voter = await contract.voters(userAddress);
       console.log(voter);
-      console.log(id.toString())
+      console.log(id.toString());
       const res = await contract.applyForPost(id.toString(), voter.name); //use real id and name
       const receipt = await res.wait();
       console.log(receipt);
@@ -116,8 +103,11 @@ export const CandidateElection = ({ election }) => {
       <div className="time left">Time left to apply: {timeLeft}</div>
       <div className="apply">
         <button
-          onClick={apply} disabled={hasApplied}
-          className=" bg-green-300 p-2 m-1 rounded-md px-3 text-lg"
+          onClick={apply}
+          disabled={hasApplied}
+          className={`${
+            hasApplied ? "bg-gray-400" : "bg-green-500"
+          } p-2 m-1 rounded-md px-3 text-lg`}
         >
           {hasApplied ? "Applied" : "Apply"}
         </button>
@@ -133,7 +123,7 @@ export const AdminElection = ({ election }) => {
   const [candidates, setCandidates] = useState([]);
 
   // console.log(election)
-  let { applicantCount, candidateCount, admin, startTime, duration, name ,id } =
+  let { applicantCount, candidateCount, admin, startTime, duration, name, id } =
     election;
   // startTime = Date.parse(startTime);
   const date = new Date(startTime.toNumber());
@@ -148,11 +138,11 @@ export const AdminElection = ({ election }) => {
   useEffect(() => {
     (async () => {
       for (let index = 0; index < candidateCount.toNumber(); index++) {
-        const candidate = await contract.getCandidate(id.toString(),index);
+        const candidate = await contract.getCandidate(id.toString(), index);
         setCandidates([...candidates, candidate]);
       }
       for (let index = 0; index < applicantCount.toNumber(); index++) {
-        const applicant = await contract.getApplicant(id.toString(),index);
+        const applicant = await contract.getApplicant(id.toString(), index);
         setApplicants([...applicants, applicant]);
       }
 

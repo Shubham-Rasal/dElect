@@ -14,6 +14,7 @@ const App = () => {
 
   const [isConnected, setIsConnected] = connect;
   const [isVoter, setIsVoter] = voter;
+  const [elections, setElections] = useState([]);
 
   const state = window.ethereum._state
   console.log("Connecton Status:", state.isConnected)
@@ -55,6 +56,15 @@ const App = () => {
      const temp = await isaVoter();
      console.log("temp ",temp)
      setIsVoter(temp)
+     //get election details
+     const electionCount = await contract.electionCount();
+      console.log(electionCount.toNumber())
+      //get election details using for loop
+      for(let i=1;i<=electionCount.toNumber();i++){
+        const election = await contract.elections(i);
+        console.log(election)
+        setElections(old=>[election,...old])
+      }
 
    })()
     
@@ -70,9 +80,10 @@ const App = () => {
       <>
        
         <Modal />
-        <h1 className="bg-amber-100">Connected as : {state.accounts[0]}</h1>
-        <div className="flex flex-col w-screen h-screen  items-start  bg-gradient-to-r from-violet-500 to-fuchsia-500 overflow-x-hidden">
-          <div className="flex w-full h-fit fixed z-50 justify-end items-center bg-fuchsia-900 overflow-x-hidden">
+        {/* <h1 className="bg-amber-100">Connected as : {state.accounts[0]}</h1> */}
+        <div className="flex flex-col w-screen h-screen  items-start  bg-gradient-to-r from-blue-500 to-teal-500 overflow-x-hidden">
+          
+         <div className="flex flex-row w-full h-16 bg-slate-700 sticky-top items-center justify-start gap-4 px-4">
             {!isVoter &&
               <div onClick={() => openRegisterModal()} className="register text-amber-400 text-center h-full hover:bg-slate-500 cursor-pointer p-2 m-2">
                 Register as voter !
@@ -90,9 +101,13 @@ const App = () => {
           </div>
           <div className="flex flex-col w-75 justify-center translate-y-20 items-center w-screen ">
             <h1 className="text-lg font-bold bg-slate-100 m-2 p-2">Active Elections to vote for</h1>
-            <Election />
-            <Election />
-            <Election />
+             
+            {elections.map((election,index)=>{
+              return(
+                <Election key={index} election={election} />
+              )
+            }
+            )}
           </div>
 
         </div>

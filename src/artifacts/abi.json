@@ -105,12 +105,6 @@
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
 		"constant": false,
 		"inputs": [
 			{
@@ -129,6 +123,12 @@
 		"payable": false,
 		"stateMutability": "nonpayable",
 		"type": "function"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
 	},
 	{
 		"constant": true,
@@ -265,8 +265,18 @@
 		"outputs": [
 			{
 				"internalType": "string",
-				"name": "",
+				"name": "name",
 				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "status",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "add",
+				"type": "address"
 			}
 		],
 		"payable": false,
@@ -291,7 +301,7 @@
 		"outputs": [
 			{
 				"internalType": "string",
-				"name": "",
+				"name": "name",
 				"type": "string"
 			}
 		],
