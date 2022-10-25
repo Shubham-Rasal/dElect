@@ -3,19 +3,82 @@ import Button from "./Button";
 import { motion } from "framer-motion";
 import { useEffect, useState, useContext } from "react";
 import { GlobalContext } from "./../GlobalContext";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Election = ({ election }) => {
+  const { contract , accounts } = useContext(GlobalContext);
   let { applicantCount, candidateCount, admin, startTime, duration, name, id } =
     election;
   const date = new Date(startTime.toNumber());
+  const voteToast = () => toast.success('Voted for Election Successfully.', {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true, 
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
+  const errorToast = (data) => toast.error(data, {
+    position: "top-right",
+    autoClose: 1000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: false,
+    draggable: true,
+    progress: undefined,
+    theme: "dark",
+  });
+
+
+   const [hasVoted, setHasVoted] = useState(false);
+  useEffect(() => {
+    const voterAddress = accounts[0];
+    const checkVote = async () => {
+       const hasVoted  = await contract.hasVoted(id)
+       setHasVoted(hasVoted)
+    }
+    checkVote();
+    console.log("Running useEffect");
+  }, [accounts, contract, id]);
+
+
+
+
+
+  async function vote(){
+       try{
+
+         const res = await contract.vote(id,1);
+         const receipt = await res.wait();
+         console.log(receipt);
+         if(receipt.status){
+            voteToast();
+         }
+        }
+        catch(err){
+          const error  = err.error;
+          console.log(error.data.message);
+          errorToast(error.data.message);
+          
+        }
+
+  }
+
+
   return (
     <div className="flex flex-col sm:w-2/4 w-auto bg-blue-300 m-3 p-3 rounded-md ">
-      <div className="title text-lg font-bold bg-slate-100 m-2 p-2 rounded-md shadow-xl">
+       
+      <div className="title text-lg font-bold bg-slate-100  p-2 rounded-md shadow-xl">
         {name}
       </div>
-      <div className=" bg-slate-200 m-2 p-2  ">
+     
+
+      <div className=" bg-slate-200 my-2 p-2  ">
         <div className="candidates rounded-md flex text-center items-center  gap-2">
-          <div className="text-lg font-bold rounded-md ">Candidates</div>
+          <div className="text-lg font-bold rounded-md  ">Candidates</div>
           <div className="text-sm font-bold text-gray-500 ">
             {candidateCount.toString()} candidates
           </div>
@@ -26,13 +89,12 @@ const Election = ({ election }) => {
         {date.toUTCString()}
       </div>
       <div className="vote">
-        <button
+        <button onClick={vote}
           className=" bg-white text-blue-500 font-bold py-2 px-4 rounded-full
           hover:bg-blue-500 hover:text-white border border-blue-500 hover:border-transparent
             transition duration-300 ease-in-out"
-          
         >
-          VOTE
+          Vote
         </button>
       </div>
     </div>
@@ -143,7 +205,10 @@ export const AdminElection = ({ election }) => {
       }
       for (let index = 0; index < applicantCount.toNumber(); index++) {
         const applicant = await contract.getApplicant(id.toString(), index);
-        setApplicants([...applicants, applicant]);
+        //check appicant status and then add only if status is pending
+        if (applicant.status == "Pending") {
+          setApplicants([...applicants, applicant]);
+        }
       }
 
       console.log(candidates);
@@ -151,13 +216,28 @@ export const AdminElection = ({ election }) => {
     })();
   }, []);
 
-  async function approve() {
-    //implementation required
-    const applicant = await contract.getApplicant(
-      election.id,
-      applicants[0].applicantId
-    );
-    console.log;
+  async function approve(applicant) {
+    // implementation required
+    try {
+      console.log(applicant);
+      const aid = applicant.applicantId;
+      const res = await contract.approveApplicant(
+        aid.toNumber(),
+        id.toNumber()
+      );
+      const receipt = await res.wait();
+      console.log(receipt);
+      const applicants = applicants.filter(
+        (app) => app.applicantId !== applicant.applicantId
+      );
+      setApplicants(applicants);
+      for (let index = 0; index < candidateCount.toNumber(); index++) {
+        const candidate = await contract.getCandidate(id.toString(), index);
+        setCandidates([...candidates, candidate]);
+      }
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   return (
@@ -195,16 +275,27 @@ export const AdminElection = ({ election }) => {
         <h2 className="flex items-center h-10  text-teal-800 drop-shadow-xl  justify-center bg-amber-100 my-1 w-1/4">
           Applicants: {applicantCount.toString()}
         </h2>
-        <div className="applicant bg-white my-1 flex flex-col p-1  m-1 shadow-md rounded-md  ">
-          <div className="name">Name</div>
-          <div className="address">Adreess</div>
-          <button
-            onClick={approve}
-            className="bg-teal-400 w-32 rounded-md shadow-md text-white"
+        {applicants.map((applicant, index) => (
+          <div
+            className="applicant bg-white my-1 flex flex-col p-1  m-1 shadow-md rounded-md  "
+            key={index}
           >
-            Approve
-          </button>
-        </div>
+            <div className="name bg-blue-200  ">Name : {applicant.name}</div>
+            <div className="address bg-blue-100 ">
+              Address : {applicant.add}
+            </div>
+            <div className="status bg-amber-100 ">
+              Status : {applicant.status}
+            </div>
+
+            <button
+              onClick={() => approve(applicant)}
+              className="bg-teal-400 w-32 rounded-md shadow-md text-white my-2"
+            >
+              Approve
+            </button>
+          </div>
+        ))}
       </div>
     </motion.div>
   );
