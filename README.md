@@ -9,7 +9,7 @@ To run the project , you need to have node installed (and git as well).
   
 After installing node run the following commands :
 <code>
-  git clone https://github.com/Shubham-Rasal/dElect.git <br></br>
+  git clone https://github.com/Shubham-Rasal/dElect.git 
   cd dElect
   npm install 
   npm run dev //To start a dev server
