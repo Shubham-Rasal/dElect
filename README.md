@@ -15,3 +15,51 @@ After installing node run the following commands :
   npm run dev //To start a dev server
   </code>
 
+
+<p>
+## The Smart Contract
+
+The smart contract consists of mainly 3 parts:
+1. The Voter and its functions
+2. The Candidate and its functions
+3. The Admin and its functions
+
+# Voter
+
+The voter is the person who is voting. The voter has the following properties:
+1. name : The name of the voter
+2. id : The id of the voter
+3. voted : A boolean value that tells whether the voter has voted or not
+4. voterAddres : The address of the voter
+5. vote() : A function that allows the voter to vote for a candidate
+
+# Candidate
+
+The candidate is the person who is running for the election. The candidate has the following properties:
+1. name : The name of the candidate
+2. id : The id of the candidate
+3. voteCount : The number of votes the candidate has received
+4. isStanding : A boolean value that tells whether the candidate is standing for the election or not
+
+
+# Admin
+
+The admin is the person who is running the election. The admin has the following properties:
+1. name : The name of the admin
+2. id : The id of the admin
+3. createElect() : A function that allows the admin to create an election
+4. approveApplicant() : A function that allows the admin to approve the applicant
+
+
+## The Frontend
+
+The frontend is made using React and TailwindCSS. The frontend consists of mainly 3 parts:
+
+1. The Landing Page which asks the user to connect their wallet
+2. The Dashboard which shows the user the list of elections
+3. The Candidate Portal which allows the user to see if they are a candidate and if they are, they can see the results of the election they are running for
+4. The Admin Portal which allows the user to see if they are an admin and if they are, they can see the list of applicants and approve them
+
+
+</p>
+
