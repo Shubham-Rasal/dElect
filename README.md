@@ -8,14 +8,14 @@ Tech Used : React, TailwindCSS, HTML, Solidity, Web3, ethers.js.
 To run the project , you need to have node installed (and git as well).
   
 After installing node run the following commands :
-<code>
+<br><code>
   git clone https://github.com/Shubham-Rasal/dElect.git 
-  </code>
+  </code><br>
   <code>
   cd dElect
-</code>
+</code><br>
   <code>
-  npm install 
+  npm install <br>
   npm run dev 
   </code>
 

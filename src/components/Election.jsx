@@ -38,6 +38,7 @@ const Election = ({ election }) => {
     const voterAddress = accounts[0];
     const checkVote = async () => {
        const hasVoted  = await contract.hasVoted(id)
+       console.log(hasVoted)
        setHasVoted(hasVoted)
     }
     checkVote();
@@ -199,8 +200,9 @@ export const AdminElection = ({ election }) => {
 
   useEffect(() => {
     (async () => {
-      for (let index = 0; index < candidateCount.toNumber(); index++) {
+      for (let index = 1; index <=candidateCount.toNumber(); index++) {
         const candidate = await contract.getCandidate(id.toString(), index);
+        console.log(candidate);
         setCandidates([...candidates, candidate]);
       }
       for (let index = 0; index < applicantCount.toNumber(); index++) {
@@ -263,13 +265,16 @@ export const AdminElection = ({ election }) => {
         <h1 className="flex items-center h-10  text-slate-800 drop-shadow-xl  justify-center bg-violet-200 my-1 w-1/4">
           Candidates {candidateCount.toString()}
         </h1>
-        <div
-          className="candidate
-      bg-white  flex flex-col p-1 text-md m-1 shadow-md rounded-md  "
-        >
-          <div className="name">Name</div>
-          <div className="Address">Addresss</div>
-        </div>
+        {candidates.map((candidate, index) => (
+          <div
+            className="applicant bg-white my-1 flex flex-col p-1  m-1 shadow-md rounded-md  "
+            key={index}
+          >
+            <div className="name bg-blue-200  ">Name : {candidate}</div>
+           
+
+          </div>
+        ))}
       </div>
       <div className="applicants flex flex-col gap-2">
         <h2 className="flex items-center h-10  text-teal-800 drop-shadow-xl  justify-center bg-amber-100 my-1 w-1/4">
