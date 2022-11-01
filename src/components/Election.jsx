@@ -3,79 +3,81 @@ import Button from "./Button";
 import { motion } from "framer-motion";
 import { useEffect, useState, useContext } from "react";
 import { GlobalContext } from "./../GlobalContext";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Election = ({ election }) => {
-  const { contract , accounts } = useContext(GlobalContext);
+  const { contract, accounts } = useContext(GlobalContext);
   let { applicantCount, candidateCount, admin, startTime, duration, name, id } =
     election;
   const date = new Date(startTime.toNumber());
-  const voteToast = () => toast.success('Voted for Election Successfully.', {
-    position: "top-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true, 
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "light",
-  });
-  const errorToast = (data) => toast.error(data, {
-    position: "top-right",
-    autoClose: 1000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: false,
-    draggable: true,
-    progress: undefined,
-    theme: "dark",
-  });
+  const voteToast = () =>
+    toast.success("Voted for Election Successfully.", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  const errorToast = (data) =>
+    toast.error(data, {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
 
+  const [hasVoted, setHasVoted] = useState([]);
+  const [candidates, setCandidates] = useState([]);
 
-   const [hasVoted, setHasVoted] = useState(false);
   useEffect(() => {
     const voterAddress = accounts[0];
     const checkVote = async () => {
-       const hasVoted  = await contract.hasVoted(id)
-       console.log(hasVoted)
-       setHasVoted(hasVoted)
-    }
+      const hasVoted = await contract.hasVoted(id);
+      console.log("Has voted for " + election.name + " ", hasVoted);
+      setHasVoted(hasVoted);
+    };
     checkVote();
-    console.log("Running useEffect");
+
+    (async () => {
+      for (let index = 1; index <= candidateCount.toNumber(); index++) {
+        const candidate = await contract.getCandidate(id.toString(), index);
+        console.log(candidate);
+        setCandidates([...candidates, {candidate:candidate , id: index}]);
+      }
+    })();
+
+    console.log(candidates);
   }, [accounts, contract, id]);
 
-
-
-
-
-  async function vote(){
-       try{
-
-         const res = await contract.vote(id,1);
-         const receipt = await res.wait();
-         console.log(receipt);
-         if(receipt.status){
-            voteToast();
-         }
-        }
-        catch(err){
-          const error  = err.error;
-          console.log(error.data.message);
-          errorToast(error.data.message);
-          
-        }
-
+  async function vote(candidate) {
+    console.log(candidate);
+    try {
+      const res = await contract.vote(id, candidate.id);
+      const receipt = await res.wait();
+      console.log(receipt);
+      if (receipt.status) {
+        voteToast();
+      }
+    } catch (err) {
+      const error = err.error;
+      console.log(error.data.message);
+      errorToast(error.data.message);
+    }
   }
-
 
   return (
     <div className="flex flex-col sm:w-2/4 w-auto bg-blue-300 m-3 p-3 rounded-md ">
-       
       <div className="title text-lg font-bold bg-slate-100  p-2 rounded-md shadow-xl">
         {name}
       </div>
-     
 
       <div className=" bg-slate-200 my-2 p-2  ">
         <div className="candidates rounded-md flex text-center items-center  gap-2">
@@ -89,14 +91,23 @@ const Election = ({ election }) => {
         <span className="text-slate-600">Starts on :</span>
         {date.toUTCString()}
       </div>
-      <div className="vote">
-        <button onClick={vote}
-          className=" bg-white text-blue-500 font-bold py-2 px-4 rounded-full
+      <div className="candidates">
+          
+      {candidates.map((candidate , index) => (
+        <div className="candidate flex justify-between border-2 m-2 p-2 border-blue-900  gap-2" key={index} >
+          <div className="name text-lg font-bold">{candidate.candidate}</div>
+          <div className="vote">
+            <button
+              onClick={()=>vote(candidate)}
+              className=" bg-white text-blue-500 font-bold py-2 px-4 rounded-full
           hover:bg-blue-500 hover:text-white border border-blue-500 hover:border-transparent
             transition duration-300 ease-in-out"
-        >
-          Vote
-        </button>
+            >
+              Vote
+            </button>
+          </div>         
+        </div>
+      ))}
       </div>
     </div>
   );
@@ -200,7 +211,7 @@ export const AdminElection = ({ election }) => {
 
   useEffect(() => {
     (async () => {
-      for (let index = 1; index <=candidateCount.toNumber(); index++) {
+      for (let index = 1; index <= candidateCount.toNumber(); index++) {
         const candidate = await contract.getCandidate(id.toString(), index);
         console.log(candidate);
         setCandidates([...candidates, candidate]);
@@ -271,8 +282,6 @@ export const AdminElection = ({ election }) => {
             key={index}
           >
             <div className="name bg-blue-200  ">Name : {candidate}</div>
-           
-
           </div>
         ))}
       </div>
