@@ -27,19 +27,20 @@ const Candidate = () => {
             console.log("NO of Elections : ", Number(electionCount.toString()))
 
             for (let i = 1; i <= electionCount; i++) {
-
+                  
                 const election = await contract.elections(i);
-                elections = [election, ...elections]
+                //print the status of the election
+                console.log("Election Status : ", election)  
+                if(election.status != 'Approved'){
+                    
+
+                    elections = [election, ...elections]
+                }
 
             }
             setElections(elections)
 
         })()
-
-
-
-
-
 
     }, [])
 

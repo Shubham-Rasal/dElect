@@ -35,6 +35,7 @@ const Election = ({ election }) => {
     });
 
   const [hasVoted, setHasVoted] = useState([]);
+  const [voted, setVoted] = useState(false);
   const [candidates, setCandidates] = useState([]);
 
   useEffect(() => {
@@ -50,7 +51,7 @@ const Election = ({ election }) => {
       for (let index = 1; index <= candidateCount.toNumber(); index++) {
         const candidate = await contract.getCandidate(id.toString(), index);
         console.log(candidate);
-        setCandidates([...candidates, {candidate:candidate , id: index}]);
+        setCandidates([...candidates, { candidate: candidate, id: index }]);
       }
     })();
 
@@ -65,6 +66,8 @@ const Election = ({ election }) => {
       console.log(receipt);
       if (receipt.status) {
         voteToast();
+        //set has voted to true for this election and this candidate
+        setHasVoted(true);
       }
     } catch (err) {
       const error = err.error;
@@ -78,37 +81,48 @@ const Election = ({ election }) => {
       <div className="title text-lg font-bold bg-slate-100  p-2 rounded-md shadow-xl">
         {name}
       </div>
-
-      <div className=" bg-slate-200 my-2 p-2  ">
-        <div className="candidates rounded-md flex text-center items-center  gap-2">
-          <div className="text-lg font-bold rounded-md  ">Candidates</div>
-          <div className="text-sm font-bold text-gray-500 ">
-            {candidateCount.toString()} candidates
+      {!hasVoted ? (
+        <div className="wrapper">
+          <div className=" bg-slate-200 my-2 p-2 ">
+            <div className="candidates rounded-md flex text-center items-center  gap-2">
+              <div className="text-lg font-bold rounded-md  ">Candidates</div>
+              <div className="text-sm font-bold text-gray-500 ">
+                {candidateCount.toString()} candidates
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <div className="start">
-        <span className="text-slate-600">Starts on :</span>
-        {date.toUTCString()}
-      </div>
-      <div className="candidates">
-          
-      {candidates.map((candidate , index) => (
-        <div className="candidate flex justify-between border-2 m-2 p-2 border-blue-900  gap-2" key={index} >
-          <div className="name text-lg font-bold">{candidate.candidate}</div>
-          <div className="vote">
-            <button
-              onClick={()=>vote(candidate)}
-              className=" bg-white text-blue-500 font-bold py-2 px-4 rounded-full
+          <div className="start">
+            <span className="text-slate-600">Starts on :</span>
+            {date.toUTCString()}
+          </div>
+          <div className="candidates">
+            {candidates.map((candidate, index) => (
+              <div
+                className="candidate flex justify-between border-2 m-2 p-2 border-blue-900  gap-2"
+                key={index}
+              >
+                <div className="name text-lg font-bold">
+                  {candidate.candidate}
+                </div>
+                <div className="vote">
+                  <button
+                    onClick={() => vote(candidate)}
+                    className=" bg-white text-blue-500 font-bold py-2 px-4 rounded-full
           hover:bg-blue-500 hover:text-white border border-blue-500 hover:border-transparent
             transition duration-300 ease-in-out"
-            >
-              Vote
-            </button>
-          </div>         
+                  >
+                    Vote
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      ))}
-      </div>
+      ) : (
+        <div className="voted text-lg font-bold bg-slate-100  p-2 rounded-md shadow-xl">
+          You have already voted for this election
+        </div>
+      )}
     </div>
   );
 };
@@ -132,18 +146,17 @@ export const CandidateElection = ({ election }) => {
     console.log("Election Candidates count : ", candidateCount.toNumber());
     (async () => {
       //for loop for applicant count
-      for (let i = 0; i < applicantCount.toNumber(); i++) {
+      for (let i = 1; i <= applicantCount.toNumber(); i++) {
         const applicant = await contract.getApplicant(id, i);
-        console.log("Applicant for " + name + " : ", applicant);
+        console.log("Applicant for " + name + " : ", applicant.status);
         const applicantAddress = applicant.add;
 
-        //check if user has applied
-        console.log("User Address : ", userAddress.toString());
-        console.log("Applicant Address : ", applicantAddress.toString());
         if (applicantAddress.toLowerCase() === userAddress.toLowerCase()) {
           console.log("User has applied for " + name);
-          if (applicant.status == "Pending") setHasApplied(true);
-          break;
+          if (applicant.status == "Pending") {
+            setHasApplied(true);
+            break;
+          } 
         }
       }
     })();
@@ -152,8 +165,8 @@ export const CandidateElection = ({ election }) => {
   async function apply() {
     try {
       const voter = await contract.voters(userAddress);
-      console.log(voter);
-      console.log(id.toString());
+      // console.log(voter);
+      // console.log(id.toString());
       const res = await contract.applyForPost(id.toString(), voter.name); //use real id and name
       const receipt = await res.wait();
       console.log(receipt);
@@ -218,14 +231,16 @@ export const AdminElection = ({ election }) => {
       }
       for (let index = 0; index < applicantCount.toNumber(); index++) {
         const applicant = await contract.getApplicant(id.toString(), index);
+        console.log(applicant);
+        // debugger;
         //check appicant status and then add only if status is pending
         if (applicant.status == "Pending") {
           setApplicants([...applicants, applicant]);
         }
       }
 
-      console.log(candidates);
-      console.log(applicants);
+      // console.log(candidates);
+      // console.log(applicants);
     })();
   }, []);
 
