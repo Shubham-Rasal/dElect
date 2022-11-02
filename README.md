@@ -72,3 +72,6 @@ The frontend is made using React and TailwindCSS. The frontend consists of mainl
 ## How to compile the smart contract
 
 To compile the smart contract, you need to go to the website called [Remix](https://remix.ethereum.org/). After going to the website, you need to create a new file and paste the code of the smart contract in it. After that, you need to compile the smart contract and deploy it on the blockchain. After deploying the smart contract, you need to copy the address of the smart contract and paste it in the frontend code in the file called [GlobalContext.js](https://github.com/Shubham-Rasal/dElect/blob/master/src/GlobalContext.jsx). After that, you need to copy the ABI of the smart contract and paste it in the frontend code in the file called [abi.json](https://github.com/Shubham-Rasal/dElect/blob/master/src/artifacts/abi.json) present in abi folder. After that, you need to run the frontend code and you are good to go.
+
+
+Note: You can interact with the smart contract directly using the [Remix](https://remix.ethereum.org/) website. You can also use the [Metamask](https://metamask.io/) extension to interact with the smart contract.
