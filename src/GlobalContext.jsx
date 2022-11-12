@@ -29,7 +29,7 @@ export const GlobalContextProvider = (props) => {
         }
 
     }
-    getAdmins()
+     getAdmins()
 
 
     return (
