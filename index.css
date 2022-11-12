@@ -10,3 +10,9 @@
 body::-webkit-scrollbar{
     display: none;
 }
+
+.feature {
+    border-image: radial-gradient(circle at top left , rgb(28, 255, 236),transparent 50%);
+    border-image-slice: 1;
+  }
+  

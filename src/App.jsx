@@ -68,7 +68,7 @@ const App = () => {
       }
 
    })()
-    alert("Please connect to the Rinkeby Test Network")
+    
   }, [])
   
   
@@ -118,17 +118,13 @@ const App = () => {
     )
 
   }
-  else{
-    console.log(isConnected)
+  else {
+    
     return (
-      <Landing />
+       <Landing/>
     )
   }
-  // else if(window.ethereum){
-  //   return(
-  //     <h1>Install Metamask</h1>
-  //   )
-  // }
+
 }
 export default App
 
