@@ -83,7 +83,7 @@ const Election = ({ election }) => {
   }
 
   return (
-    <div className="flex flex-col sm:w-2/4 w-auto bg-slate-900 shadow-slate-300 m-3 p-3 rounded-md ">
+    <div className="flex flex-col sm:w-2/4 w-auto bg-slate-500 shadow-slate-300 m-3 p-3 rounded-md ">
       <div className="title text-lg font-bold bg-slate-100  p-2  shadow-xl">
         {name}
       </div>
