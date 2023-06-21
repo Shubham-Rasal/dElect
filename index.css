@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-
-/* *{
-    border: red 1px solid;
+/* 
+*{
+    border: red 0px solid;
 } */
 
 body::-webkit-scrollbar{

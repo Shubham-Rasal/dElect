@@ -13,9 +13,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <GlobalContextProvider>
       <Router>
         <Routes>
-          <Route path='/dElect' element={<App />} />
-          <Route path='/dElect/candidate' element={<Candidate />} />
-          <Route path='/dElect/admin' element={<AdminPortal />} />
+          <Route path='/' element={<App />} />
+          <Route path='/candidate' element={<Candidate />} />
+          <Route path='/admin' element={<AdminPortal />} />
         </Routes>
 
 

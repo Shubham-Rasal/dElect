@@ -11,6 +11,12 @@ const Election = ({ election }) => {
   let { applicantCount, candidateCount, admin, startTime, duration, name, id } =
     election;
   const date = new Date(startTime.toNumber());
+  const today = Date.parse(new Date().toLocaleString());
+  let timeLeft = Math.ceil(
+    (startTime.toNumber() - today) / (1000 * 60 * 60 * 24)
+  );
+  const formatter = new Intl.RelativeTimeFormat("en");
+  timeLeft = formatter.format(timeLeft, "days");
   const voteToast = () =>
     toast.success("Voted for Election Successfully.", {
       position: "top-right",
@@ -77,14 +83,14 @@ const Election = ({ election }) => {
   }
 
   return (
-    <div className="flex flex-col sm:w-2/4 w-auto bg-blue-300 m-3 p-3 rounded-md ">
-      <div className="title text-lg font-bold bg-slate-100  p-2 rounded-md shadow-xl">
+    <div className="flex flex-col sm:w-2/4 w-auto bg-slate-900 shadow-slate-300 m-3 p-3 rounded-md ">
+      <div className="title text-lg font-bold bg-slate-100  p-2  shadow-xl">
         {name}
       </div>
       {!hasVoted ? (
         <div className="wrapper">
           <div className=" bg-slate-200 my-2 p-2 ">
-            <div className="candidates rounded-md flex text-center items-center  gap-2">
+            <div className="candidates rounded-sm flex text-center items-center  gap-2">
               <div className="text-lg font-bold rounded-md  ">Candidates</div>
               <div className="text-sm font-bold text-gray-500 ">
                 {candidateCount.toString()} candidates
@@ -92,8 +98,23 @@ const Election = ({ election }) => {
             </div>
           </div>
           <div className="start">
-            <span className="text-slate-600">Starts on :</span>
-            {date.toUTCString()}
+            {startTime.toNumber() > Date.parse(new Date().toLocaleString()) ? (
+              <div className="text-lg font-bold text-slate-800">
+                Election Starts in {timeLeft}
+              </div>
+            ) : startTime.toNumber() >
+                Date.parse(new Date().toLocaleString()) &&
+              startTime.toNumber() <
+                Date.parse(new Date().toLocaleString()) +
+                  duration.toNumber() ? (
+              <div className="text-lg font-bold text-green-900">
+                Election is live
+              </div>
+            ) : (
+              <div className="text-lg font-bold text-slate-900">
+                Election Ended
+              </div>
+            )}
           </div>
           <div className="candidates">
             {candidates.map((candidate, index) => (
@@ -156,7 +177,7 @@ export const CandidateElection = ({ election }) => {
           if (applicant.status == "Pending") {
             setHasApplied(true);
             break;
-          } 
+          }
         }
       }
     })();
@@ -178,26 +199,47 @@ export const CandidateElection = ({ election }) => {
 
   return (
     <div className="flex flex-col shadow-lg bg-slate-200 m-3 p-1  rounded-md">
-      <div className="name p-1 m-1 text-xl font-semibold ">{name}</div>
+      <div className="name  text-xl font-semibold ">{name}</div>
       <div className="admin">
         <span>Admin : </span>
-        {admin}
+        <a
+          href={`https://etherscan.io/address/${admin}`}
+          className="text-blue-500"
+        >
+          {admin.slice(0, 6)}...
+        </a>
       </div>
       <div className="start">
         <span className="text-slate-600">Starts on :</span>
         {date.toUTCString()}
       </div>
-      <div className="time left">Time left to apply: {timeLeft}</div>
-      <div className="apply">
-        <button
-          onClick={apply}
-          disabled={hasApplied}
-          className={`${
-            hasApplied ? "bg-gray-400" : "bg-green-500"
-          } p-2 m-1 rounded-md px-3 text-lg`}
-        >
-          {hasApplied ? "Applied" : "Apply"}
-        </button>
+      <div className="time left">
+        {startTime.toNumber() > Date.parse(new Date().toLocaleString()) ? (
+          <>
+            <div className="text-lg font-bold text-slate-800">
+              Election Starts in {timeLeft}
+            </div>
+            <div className="apply">
+              <button
+                onClick={apply}
+                disabled={hasApplied}
+                className={`${
+                  hasApplied ? "bg-gray-400" : "bg-green-500"
+                } p-2 m-1 rounded-md px-3 text-lg`}
+              >
+                {hasApplied ? "Applied" : "Apply"}
+              </button>
+            </div>
+          </>
+        ) : startTime.toNumber() > Date.parse(new Date().toLocaleString()) &&
+          startTime.toNumber() <
+            Date.parse(new Date().toLocaleString()) + duration.toNumber() ? (
+          <div className="text-lg font-bold text-green-900">
+            Election is live
+          </div>
+        ) : (
+          <div className="text-lg font-bold text-slate-900">Election Ended</div>
+        )}
       </div>
     </div>
   );

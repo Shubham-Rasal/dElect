@@ -75,7 +75,7 @@ const AdminPortal = () => {
 
     if(!isConnected){
         return(
-            <Navigate replace to={'/dElect/'} />
+            <Navigate replace to={'/'} />
         )
     }
 

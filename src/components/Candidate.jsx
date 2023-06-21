@@ -47,7 +47,7 @@ const Candidate = () => {
     if (!connected) {
 
         return (
-            <Navigate replace to={'/dElect/'} />
+            <Navigate replace to={'/'} />
         )
     }
 

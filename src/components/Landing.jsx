@@ -35,10 +35,10 @@ const Landing = () => {
       e.target.disabled = false;
     }
   }
-  const feature = `feature  bg-slate-50 text-teal-600 w-48   aspect-square
-  flex  text-center rounded-lg  text-2xl hover:scale-105
+  const feature = `feature  bg-slate-50 text-teal-600 w-32 lg:w-48   aspect-square
+  flex  text-center rounded-lg  text-md hover:scale-105
    transition scale duration-700
-   items-center justify-center m-4  p-4 cursor-pointer shadow-2xl 
+   items-center justify-center m-2  p-2 cursor-pointer shadow-2xl 
     dark:bg-slate-800 dark:text-teal-200
    dark:hover:bg-slate-700 dark:hover:text-slate-100            
      dark:hover:opacity-100
@@ -47,7 +47,7 @@ const Landing = () => {
      dark:border-t-2`;
 
   return (
-    <div className="main bg-slate-900 h-auto text-slate-50">
+    <div className="main flex flex-col bg-slate-900 h-screen text-slate-50">
       <div className="navbar absolute flex w-screen h-auto justify-between items-center lg:px-32 p-3">
         <div className="logo p-2 m-2 rounded-md">dElect</div>
         <div className="connect">
@@ -71,32 +71,27 @@ const Landing = () => {
           )}
         </div>
       </div>
-      <main>
+      <main className="flex flex-col justify-center items-center h-full w-screen">
         <section>
-          <div className="flex flex-col lg:items-center justify-center h-screen p-4">
-            <div className="lg:text-6xl text-5xl">dElect</div>
+          <div className="flex flex-col lg:items-center justify-center text-center h-full p-4 m-2">
+            <div className="lg:text-6xl text-3xl lg:5xl"> Welcome to  <span className="text-teal-600">d</span>Elect</div>
             <div className="lg:text-4xl text-xl lg:text-center">
-              Decentralized Elections
+              <span className="text-teal-600">Decentralised </span> Elections
             </div>
             <p className="">
-              dElect is a decentralized application that allows you to create
-              and participate in elections.
+              dElect is a decentralized application that allows you to vote, create and participate in elections.
             </p>
-          </div>
-        </section>
-        <section className=" h-auto lg:h-screen p-4 m-4 flex flex-col items-center justify-around">
-          <div className="features text-4xl">Features</div>
-          <div className="container  flex flex-wrap lg:gap-8 items-center justify-center">
-            <div
-              className={feature}
-            >
-              Decentralised
+            <div className="container mt-10  flex flex-wrap lg:gap-8 items-center justify-center">
+              <div className={feature}>Decentralised</div>
+              <div className={feature}>Autonomous</div>
+              <div className={feature}>Secure</div>
             </div>
-            <div className={feature}>Autonomous</div>
-            <div className={feature}>Secure</div>
           </div>
         </section>
       </main>
+      <footer className="flex justify-center items-center h-16 bg-slate-800 text-slate-50">
+        Made with ❤️ by {"Shubham"}
+      </footer>
     </div>
   );
 };

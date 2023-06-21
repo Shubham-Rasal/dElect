@@ -23,7 +23,7 @@ export const GlobalContextProvider = (props) => {
     const { accounts } = window?.ethereum?._state;
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const contractABI = abi;
-  const contractAddress = "0x69c0fB9A4d880bEE7DEF6e1de176E06fBC43089D";
+  const contractAddress = "0xCc6195a2146058d771bf2f411F45A50d3a61d0d6";
   const contract = new ethers.Contract(
     contractAddress,
     contractABI,

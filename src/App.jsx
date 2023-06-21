@@ -55,7 +55,6 @@ const App = () => {
   useEffect(() => {
    (async()=>{
      const temp = await isaVoter();
-     console.log("temp ",temp)
      setIsVoter(temp)
      //get election details
      const electionCount = await contract.electionCount();
@@ -82,27 +81,26 @@ const App = () => {
        
         <Modal />
         {/* <h1 className="bg-amber-100">Connected as : {state.accounts[0]}</h1> */}
-        <div className="flex flex-col w-screen h-screen  items-start  bg-gradient-to-r from-blue-500 to-teal-500 overflow-x-hidden">
-          
-         <div className="flex flex-row w-full h-16 bg-slate-700 sticky-top items-center text-center justify-start gap-4 px-4">
+        <div className="flex flex-col w-screen items-start justify-start bg-slate-900">
+         <div className="flex flex-row w-full h-16 bg-slate-700 sticky-top  text-center justify-start items-center gap-4 px-4">
             {!isVoter &&
-              <div onClick={() => openRegisterModal()} className="register text-amber-400 text-center h-full hover:bg-slate-500 cursor-pointer p-2 m-2">
+              <div onClick={() => openRegisterModal()} className="register flex  items-center text-amber-400 text-center h-full hover:bg-slate-500 cursor-pointer p-2 m-2">
                 Register as voter !
               </div>
             }
 
             
-            <Link to='/dElect/admin'>
+            <Link to='/admin'>
               <Button name='Create' />
             </Link>
-            <Link to='/dElect/candidate'>
+            <Link to='/candidate'>
               <Button name='Apply' />
             </Link>
 
           </div>
           <ToastContainer/>
-          <div className="flex flex-col w-75 justify-center translate-y-20 items-center w-screen ">
-            <h1 className="text-lg font-bold bg-slate-100 m-2 p-2">Active Elections to vote for</h1>
+          <div className="flex flex-col w-75 justify-center min-h-screen items-center w-screen ">
+            <h1 className="text-lg font-bold text-white m-2 p-2">Active Elections</h1>
              
             {elections.map((election,index)=>{
               return(
