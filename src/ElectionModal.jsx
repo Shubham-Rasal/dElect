@@ -10,13 +10,9 @@ export const ElectionModal = ({ state }) => {
   const [electionName, setElectionName] = useState('')
   const [date, setDate] = useState(new Date());
   const [duration, setDuration] = useState(1000);
+  const [loading, setLoading] = useState(false);
 
   const [elections, setElections] = state.state;
-
-
-
-
-
 
   const notify = () => toast.success('Created Election Successfully.', {
     position: "top-right",
@@ -31,16 +27,15 @@ export const ElectionModal = ({ state }) => {
 
   const modal = document.getElementsByClassName('emodal');
   async function createElection() {
-
     if (electionName === '') {
       alert('Enter a name');
       return;
     }
-
-
     try {
 
       const unix = Date.parse(date);
+
+      setLoading(true);
       const res = await contract.createElection(electionName, unix, duration);
       const receipt =await  res.wait();
       console.log(receipt)
@@ -55,6 +50,7 @@ export const ElectionModal = ({ state }) => {
           setElections(old => [ addedElection,...old])
 
         },1000)
+        setLoading(false);
 
         console.log(elections)
         modal[0].classList.add('invisible')
@@ -63,26 +59,27 @@ export const ElectionModal = ({ state }) => {
       }
 
     } catch (error) {
+      setLoading(false);
       console.log(error)
     }
-
-
-
-
 
   }
 
   const cancel = () => {
-    modal[0].classList.add('invisible')
+    modal[0].classList.add('hidden')
     modal[0].classList.add('opacity-0')
   }
 
 
 
-
+  if(loading) return (
+    <div>
+      Creating Election...
+    </div>
+  )
 
   return (
-    <div className=" z-50 transition-all emodal w-screen h-screen absolute opacity-0 hidden  ease-in-out delay-500  bg-gradient-to-r from-blue-300 to-pink-300">
+    <div className=" z-50 transition-all emodal w-screen h-screen absolute opacity-0 hidden  ease-in-out delay-500 bg-black bg-opacity-50">
       <ToastContainer />
       <div className="modal-body h-full w-full flex flex-col justify-center items-center ">
         <div className="flex justify-center">

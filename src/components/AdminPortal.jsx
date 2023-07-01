@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from 'react'
-import { Navigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { ElectionModal } from '../ElectionModal';
 import { GlobalContext } from '../GlobalContext';
 import Election, { AdminElection } from './Election';
@@ -60,49 +60,45 @@ const AdminPortal = () => {
 
     }
 
-
-
     async function openElectionModal() {
         // console.log(modal[0])
         console.log(elections)
         modal[0].classList.remove('hidden')
         modal[0].classList.remove('opacity-0')
 
-
-
     }
   
-
     if(!isConnected){
         return(
             <Navigate replace to={'/'} />
         )
-    }
-
-    
-   
-
-
+    }   
 
     return (
 
-        <div className="portal h-screen w-screen">
+        <div className="portal h-screen w-screen bg-slate-900 text-white">
             
             <ElectionModal state={{ state: [elections, setElections] }} />
 
-             
-            <h1 className='text-2xl w-full text-center font-medium text-cyan-800' >Admin Portal</h1>
+            <Link to='/'>
+                <button className=' m-2 p-2 rounded-md bg-slate-800' >Home</button>
+            </Link>
+            <h1 className='mx-auto text-2xl text-center font-medium' >Admin Portal</h1>
             {!isAdmin &&
 
-                <div className="register w-screen flex justify-end p-3  bg-cyan-50 ">
-                    <button onClick={handleAdminRegister} className='bg-cyan-300 p-2 rounded-md' >Register as admin</button>
+                <div className="register w-screen flex justify-end p-3 ">
+                    <button onClick={handleAdminRegister} className=' p-2 rounded-md bg-slate-600' >Register as admin</button>
                 </div>
 
             }
             {isAdmin &&
-                <div className="bg-green-200  w-screen p-2 mx-auto flex flex-col justify-end">
+                <div className="  w-screen p-2 mx-auto flex flex-col justify-end">
 
-                    <button onClick={openElectionModal} className="plus text-1xl  bg-blue-700 px-5 p-1 rounded-sm text-white w-fit mx-2"  >New</button>
+                    <button onClick={openElectionModal} className="plus text-1xl  w-12 h-12 bg-slate-600 rounded-full flex justify-center items-center fixed bottom-10 right-10">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-amber-50" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M10 3a1 1 0 00-1 1v5H4a1 1 0 100 2h5v5a1 1 0 102 0v-5h5a1 1 0 100-2h-5V4a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                    </button>
 
                     <ul>
                         {isComplete &&  elections.map((election, index) => (

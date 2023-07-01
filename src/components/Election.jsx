@@ -252,7 +252,7 @@ export const AdminElection = ({ election }) => {
   const [candidates, setCandidates] = useState([]);
 
   // console.log(election)
-  let { applicantCount, candidateCount, admin, startTime, duration, name, id } =
+  let { applicantCount, candidateCount, startTime, duration, name, id } =
     election;
   // startTime = Date.parse(startTime);
   const date = new Date(startTime.toNumber());
@@ -310,9 +310,19 @@ export const AdminElection = ({ election }) => {
     }
   }
 
+  async function getWinner(id) {
+    try {
+      console.log(id.toNumber());  
+      const res = await contract.getWinner(id.toNumber());
+      console.log(res);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   return (
     <motion.div
-      className="container w-full bg-slate-300 my-3 mx-auto px-3"
+      className="container w-full bg-slate-700 text-teal-200 my-3 mx-auto px-3"
       initial={{ scale: 0 }}
       animate={{ scale: 1 }}
       transition={{
@@ -320,17 +330,26 @@ export const AdminElection = ({ election }) => {
         duration: 1,
       }}
     >
-      <div className="title text-xl text-teal-700 p-1 m-1 ">{name}</div>
+      <div className="title text-xl  p-1 m-1 ">{name}</div>
       <div className="starttime w-full   flex gap-3 p-1 m-1 ">
-        <div className=" bg-yellow-50 text-gray-500 font-semibold rounded-xl px-2 shadow-md ">
-          Starts on {date.toUTCString()}
-        </div>
-        <div className="duration bg-yellow-50 text-gray-600 font-semibold rounded-lg px-2 shadow-md">
-          {timeLeft < 0 ? "Election over" : timeLeft}
-        </div>
+        {startTime.toNumber() > Date.parse(new Date().toLocaleString()) ? (
+          <>
+            <div className="text-lg font-bold text-slate-300">
+              Election Starts in {timeLeft}
+            </div>
+          </>
+        ) : startTime.toNumber() > Date.parse(new Date().toLocaleString()) &&
+          startTime.toNumber() <
+            Date.parse(new Date().toLocaleString()) + duration.toNumber() ? (
+          <div className="text-lg font-bold text-green-300">
+            Election is live
+          </div>
+        ) : (
+          <div className="text-lg font-bold text-slate-300">Election Ended</div>
+        )}
       </div>
       <div className="candidates w-full flex flex-col gap-3">
-        <h1 className="flex items-center h-10  text-slate-800 drop-shadow-xl  justify-center bg-violet-200 my-1 w-1/4">
+        <h1 className="flex items-center h-10  text-slate-100 drop-shadow-xl  justify-center bg-purple-900 my-1 w-1/4">
           Candidates {candidateCount.toString()}
         </h1>
         {candidates.map((candidate, index) => (
@@ -343,7 +362,7 @@ export const AdminElection = ({ election }) => {
         ))}
       </div>
       <div className="applicants flex flex-col gap-2">
-        <h2 className="flex items-center h-10  text-teal-800 drop-shadow-xl  justify-center bg-amber-100 my-1 w-1/4">
+        <h2 className="flex items-center h-10  text-slate-200 drop-shadow-xl  justify-center bg-amber-900 my-1 w-1/4">
           Applicants: {applicantCount.toString()}
         </h2>
         {applicants.map((applicant, index) => (
@@ -367,6 +386,13 @@ export const AdminElection = ({ election }) => {
             </button>
           </div>
         ))}
+
+        <button
+          onClick={() => getWinner(id)}
+          className="bg-teal-300 w-32 rounded-md shadow-md text-black my-2"
+        >
+          Declare Winner
+        </button>
       </div>
     </motion.div>
   );

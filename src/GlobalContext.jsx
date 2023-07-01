@@ -6,21 +6,10 @@ export const GlobalContext = createContext();
 
 console.log("c");
 export const GlobalContextProvider = (props) => {
-  
   const [isConnected, setIsConnected] = useState(false);
   const [isVoter, setIsVoter] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  if (!window.ethereum)
-    return (
-      <GlobalContext.Provider
-        value={{
-          connect: [isConnected, setIsConnected],
-            }}
-      >
-        <Landing />
-      </GlobalContext.Provider>
-    );
-    const { accounts } = window?.ethereum?._state;
+  const { accounts } = window?.ethereum?._state;
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const contractABI = abi;
   const contractAddress = "0xCc6195a2146058d771bf2f411F45A50d3a61d0d6";
@@ -29,6 +18,9 @@ export const GlobalContextProvider = (props) => {
     contractABI,
     provider.getSigner()
   );
+
+
+  // setIsConnected(window.ethereum._state.accounts.length > 0 ? true : false);
 
   const getAdmins = async () => {
     const admin = await contract.admins(accounts[0]);

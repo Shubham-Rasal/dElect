@@ -6,10 +6,10 @@ import { CandidateElection } from './Election'
 
 const Candidate = () => {
 
-    const { contract } = useContext(GlobalContext)
     const { connect } = useContext(GlobalContext)
     const [connected, setIsConnected] = connect;
     console.log(connected)
+    const { contract } = useContext(GlobalContext)
     let electionCount = 0;
 
 
@@ -44,7 +44,7 @@ const Candidate = () => {
 
     }, [])
 
-    if (!connected) {
+    if (window.ethereum._state.accounts.length == 0) {
 
         return (
             <Navigate replace to={'/'} />

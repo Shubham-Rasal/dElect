@@ -5,7 +5,6 @@ import { GlobalContextProvider } from './GlobalContext';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Candidate from './components/Candidate';
 import AdminPortal from './components/AdminPortal';
-import Landing from './components/Landing';
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(

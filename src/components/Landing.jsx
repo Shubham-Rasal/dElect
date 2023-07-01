@@ -8,7 +8,6 @@ const Landing = () => {
   async function handleConnect(e) {
     //styling
     e.preventDefault();
-    console.log(e.target.parentNode.parentNode);
     e.target.disabled = true;
     e.target.parentNode.parentNode.classList.add("blur-sm");
     //connecting to metamask
@@ -45,6 +44,10 @@ const Landing = () => {
      dark:opacity-70
      dark:border-l-2
      dark:border-t-2`;
+
+    
+  
+
 
   return (
     <div className="main flex flex-col bg-slate-900 h-screen text-slate-50">
