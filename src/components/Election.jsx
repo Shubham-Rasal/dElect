@@ -61,7 +61,6 @@ const Election = ({ election }) => {
       }
     })();
 
-    console.log(candidates);
   }, [accounts, contract, id]);
 
   async function vote(candidate) {
@@ -83,7 +82,7 @@ const Election = ({ election }) => {
   }
 
   return (
-    <div className="flex flex-col sm:w-2/4 w-auto bg-slate-500 shadow-slate-300 m-3 p-3 rounded-md ">
+    <div className="flex flex-col sm:w-2/4 w-auto bg-slate-400 p-2 m-2">
       <div className="title text-lg font-bold bg-slate-100  p-2  shadow-xl">
         {name}
       </div>
@@ -267,12 +266,12 @@ export const AdminElection = ({ election }) => {
   useEffect(() => {
     (async () => {
       for (let index = 1; index <= candidateCount.toNumber(); index++) {
-        const candidate = await contract.getCandidate(id.toString(), index);
+        const candidate = await contract.getCandidate(id.toNumber(), index);
         console.log(candidate);
         setCandidates([...candidates, candidate]);
       }
       for (let index = 0; index < applicantCount.toNumber(); index++) {
-        const applicant = await contract.getApplicant(id.toString(), index);
+        const applicant = await contract.getApplicant(id.toNumber(), index);
         console.log(applicant);
         // debugger;
         //check appicant status and then add only if status is pending
@@ -280,9 +279,6 @@ export const AdminElection = ({ election }) => {
           setApplicants([...applicants, applicant]);
         }
       }
-
-      // console.log(candidates);
-      // console.log(applicants);
     })();
   }, []);
 
@@ -367,14 +363,14 @@ export const AdminElection = ({ election }) => {
         </h2>
         {applicants.map((applicant, index) => (
           <div
-            className="applicant bg-white my-1 flex flex-col p-1  m-1 shadow-md rounded-md  "
+            className="applicant  my-1 flex flex-col p-1  m-1 shadow-md rounded-md  "
             key={index}
           >
-            <div className="name bg-blue-200  ">Name : {applicant.name}</div>
-            <div className="address bg-blue-100 ">
+            <div className="name  ">Name : {applicant.name}</div>
+            <div className="address  ">
               Address : {applicant.add}
             </div>
-            <div className="status bg-amber-100 ">
+            <div className="status  ">
               Status : {applicant.status}
             </div>
 

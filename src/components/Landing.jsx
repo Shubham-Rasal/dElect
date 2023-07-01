@@ -34,7 +34,7 @@ const Landing = () => {
       e.target.disabled = false;
     }
   }
-  const feature = `feature  bg-slate-50 text-teal-600 w-32 lg:w-48   aspect-square
+  const feature = `feature  bg-slate-50 text-teal-600 w-32    aspect-square
   flex  text-center rounded-lg  text-md hover:scale-105
    transition scale duration-700
    items-center justify-center m-2  p-2 cursor-pointer shadow-2xl 
@@ -52,7 +52,9 @@ const Landing = () => {
   return (
     <div className="main flex flex-col bg-slate-900 h-screen text-slate-50">
       <div className="navbar absolute flex w-screen h-auto justify-between items-center lg:px-32 p-3">
-        <div className="logo p-2 m-2 rounded-md">dElect</div>
+        <div className="logo p-2 m-2 rounded-md">
+          <a href="/">dElect</a>
+        </div>
         <div className="connect">
           {!window.ethereum ? (
             <div className="install p-2 m-1 bg-white rounded-md text-slate-900">

@@ -94,8 +94,8 @@ const AdminPortal = () => {
             {isAdmin &&
                 <div className="  w-screen p-2 mx-auto flex flex-col justify-end">
 
-                    <button onClick={openElectionModal} className="plus text-1xl  w-12 h-12 bg-slate-600 rounded-full flex justify-center items-center fixed bottom-10 right-10">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-amber-50" viewBox="0 0 20 20" fill="currentColor">
+                    <button onClick={openElectionModal} className="plus text-1xl  w-12 h-12 bg-amber-500 rounded-full flex justify-center items-center fixed bottom-10 right-10">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-amber-100" viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" d="M10 3a1 1 0 00-1 1v5H4a1 1 0 100 2h5v5a1 1 0 102 0v-5h5a1 1 0 100-2h-5V4a1 1 0 00-1-1z" clipRule="evenodd" />
                         </svg>
                     </button>
